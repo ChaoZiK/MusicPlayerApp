@@ -74,4 +74,7 @@ dependencies {
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
+
+    // Splash Screen API
+    implementation(libs.androidx.core.splashscreen)
 }
