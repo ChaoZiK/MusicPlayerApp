@@ -10,4 +10,6 @@ object AppIcons {
     val search = R.drawable.ic_search
     val sort = R.drawable.ic_sort
     val moreDots = R.drawable.ic_more
+    val arrowBack = R.drawable.ic_arrow_back
+    val crossCircle = R.drawable.ic_cross_circle
 }

@@ -6,18 +6,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.musicplayer.data.Song
-import com.example.musicplayer.ui.components.MiniPlayer
-import com.example.musicplayer.ui.components.TopBar
+import com.example.musicplayer.ui.components.home.MiniPlayer
+import com.example.musicplayer.ui.components.home.TopBar
 
-import com.example.musicplayer.ui.components.Buttons
-import com.example.musicplayer.ui.components.HeaderInfo
-import com.example.musicplayer.ui.components.SongList
-import com.example.musicplayer.ui.components.SortButton
+import com.example.musicplayer.ui.components.home.Buttons
+import com.example.musicplayer.ui.components.home.HeaderInfo
+import com.example.musicplayer.ui.components.home.SongList
+import com.example.musicplayer.ui.components.home.SortButton
 import com.example.musicplayer.ui.theme.Dimensions
 
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onSearchClick: () -> Unit
+) {
     val songs = listOf(
         Song("Song 1", "unknown"),
         Song("Song 2", "unknown")
@@ -25,7 +27,7 @@ fun HomeScreen() {
 
     Scaffold(
         topBar = {
-            TopBar()
+            TopBar(onSearchClick = onSearchClick)
         }
     ) { padding ->
         Box(
