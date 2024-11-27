@@ -15,11 +15,14 @@ import com.example.musicplayer.ui.theme.AppShapes
 import com.example.musicplayer.ui.theme.Dimensions
 
 @Composable
-fun SongItem(song: Song) {
+fun SongItem(
+    song: Song,
+    onMoreClick: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = Dimensions.paddingSmall),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Card(
@@ -50,7 +53,6 @@ fun SongItem(song: Song) {
                 song.title,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface
-
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
@@ -60,12 +62,12 @@ fun SongItem(song: Song) {
             )
         }
 
-        IconButton(onClick = { }) {
+        IconButton(onClick = onMoreClick) {
             Icon(
                 painter = painterResource(AppIcons.moreDots),
                 contentDescription = "More options",
-                tint =  MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(20.dp)
+                tint = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.size(18.dp)
             )
         }
     }

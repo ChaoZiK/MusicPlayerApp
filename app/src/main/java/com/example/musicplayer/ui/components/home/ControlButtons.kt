@@ -1,4 +1,5 @@
 package com.example.musicplayer.ui.components.home
+import android.service.controls.templates.ControlButton
 import androidx.compose.foundation.layout.*
 
 import androidx.compose.material3.*
@@ -12,7 +13,7 @@ import com.example.musicplayer.ui.theme.Dimensions
 import com.example.musicplayer.ui.theme.AppIcons
 
 @Composable
-fun Buttons(
+fun ControlButtons(
     onShuffleClick: () -> Unit,
     onPlayClick: () -> Unit
 ) {
@@ -39,11 +40,11 @@ fun Buttons(
             Icon(
                 painter = painterResource(AppIcons.shuffle),
                 contentDescription = "Shuffle",
-                modifier = Modifier.size(Dimensions.iconSizeSmall)
+                modifier = Modifier.size(20.dp)
             )
             Spacer(modifier = Modifier.width(Dimensions.paddingSmall))
             Text(
-                text = "Trộn",
+                text = "Shuffle",
                 style = MaterialTheme.typography.bodyLarge
             )
         }
@@ -66,7 +67,7 @@ fun Buttons(
             )
             Spacer(modifier = Modifier.width(Dimensions.paddingSmall))
             Text(
-                text = "Phát",
+                text = "Play",
                 style = MaterialTheme.typography.bodyLarge
             )
         }
