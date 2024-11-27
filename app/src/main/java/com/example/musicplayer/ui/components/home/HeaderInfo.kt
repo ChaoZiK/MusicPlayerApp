@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components
+package com.example.musicplayer.ui.components.home
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.*

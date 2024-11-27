@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components
+package com.example.musicplayer.ui.components.home
 
 import androidx.compose.foundation.layout.*
 
@@ -9,8 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.musicplayer.ui.theme.AppIcons
-
-import com.example.musicplayer.ui.theme.PrimaryColor
 
 
 @Composable
