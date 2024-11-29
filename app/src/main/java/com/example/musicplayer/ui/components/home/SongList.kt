@@ -19,7 +19,7 @@ fun SongList(
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(
             top = 16.dp,
-            bottom = 80.dp
+            bottom = 70.dp + Dimensions.paddingXLarge
         ),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {

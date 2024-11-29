@@ -32,7 +32,7 @@ fun SearchTextField(
         value = searchText,
         onValueChange = onSearchTextChanged,
         modifier = modifier
-            .height(40.dp)
+            .height(48.dp)
             .animateContentSize(),
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
@@ -96,7 +96,7 @@ private fun SearchTextFieldDecoration(
 private fun SearchPlaceholder() {
     Text(
         text = stringResource(R.string.search_placeholder),
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
     )
 }

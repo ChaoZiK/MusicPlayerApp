@@ -10,7 +10,8 @@ import com.example.musicplayer.ui.viewmodel.SearchViewModel
 
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel
+    viewModel: SearchViewModel,
+    onBackPressed: () -> Unit
 ) {
     val searchText by viewModel.searchText.collectAsState()
 
@@ -18,7 +19,10 @@ fun SearchScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         SearchBar(
-            onBackClick = { viewModel.deactivateSearch() },
+            onBackClick = {
+                viewModel.deactivateSearch()
+                onBackPressed()
+            },
             searchText = searchText,
             onSearchTextChanged = { viewModel.onSearchTextChange(it) }
         )
