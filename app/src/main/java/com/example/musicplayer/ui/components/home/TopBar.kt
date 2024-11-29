@@ -13,16 +13,21 @@ import com.example.musicplayer.ui.theme.Dimensions
 
 @Composable
 fun TopBar(
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onMenuClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .statusBarsPadding()
             .fillMaxWidth()
-            .padding(horizontal = Dimensions.paddingMedium, vertical = Dimensions.paddingSmall)
-    ) {
+            .padding(
+                start = Dimensions.paddingMedium,
+                end = Dimensions.paddingMedium,
+                top = 12.dp,
+                bottom = Dimensions.paddingSmall
+            )    ) {
         IconButton(
-            onClick = { },
+            onClick = onMenuClick,
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .size(40.dp)
@@ -31,7 +36,7 @@ fun TopBar(
                 painter = painterResource(AppIcons.menuBurger),
                 contentDescription = "Menu",
                 tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
 
@@ -46,7 +51,7 @@ fun TopBar(
                 painter = painterResource(AppIcons.search),
                 contentDescription = "Search",
                 tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(26.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
     }

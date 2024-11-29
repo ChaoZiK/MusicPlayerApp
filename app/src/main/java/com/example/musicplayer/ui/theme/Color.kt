@@ -9,7 +9,7 @@ val PurpleDarkGrey80 = Color(0xFF9476FF)
 
 
 val DarkBackground = Color(0xFF3A3A3A)
-val SurfaceLight = Color(0xFFFAFAFA)
+val SurfaceLight = Color(0xFFFFFFFF)
 val SurfaceDark = Color(0xFF303030)
 
 

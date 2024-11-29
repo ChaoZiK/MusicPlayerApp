@@ -18,7 +18,12 @@ fun SearchBar(
         modifier = modifier
             .statusBarsPadding()
             .fillMaxWidth()
-            .padding(horizontal = Dimensions.paddingMedium, vertical = Dimensions.paddingSmall)
+            .padding(
+                start = Dimensions.paddingMedium,
+                end = Dimensions.paddingMedium,
+                top = 12.dp,
+                bottom = Dimensions.paddingSmall
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
