@@ -1,43 +1,70 @@
 package com.example.musicplayer.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.musicplayer.data.Song
 import com.example.musicplayer.ui.components.home.*
+import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.theme.AppIcons
 import com.example.musicplayer.ui.theme.Dimensions
+import kotlinx.coroutines.launch
+
+val songs = listOf(
+    Song("Song 1", "unknown"),
+    Song("Song 2", "unknown"),
+    Song("Song 3", "unknown"),
+    Song("Song 4", "unknown"),
+    Song("Song 5", "unknown"),
+    Song("Song 6", "unknown"),
+    Song("Song 7", "unknown"),
+    Song("Song 8", "unknown"),
+    Song("Song 9", "unknown"),
+    Song("Song 10", "unknown"),
+)
+
 
 @Composable
 fun HomeScreen(
     onSearchClick: () -> Unit
 ) {
-    val songs = listOf(
-        Song("Song 1", "unknown"),
-        Song("Song 2", "unknown"),
-        Song("Song 3", "unknown"),
-        Song("Song 4", "unknown"),
-        Song("Song 5", "unknown"),
-        Song("Song 6", "unknown"),
-        Song("Song 7", "unknown"),
-        Song("Song 8", "unknown"),
-        Song("Song 9", "unknown"),
-        Song("Song 10", "unknown"),
-    )
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-    Scaffold(
-        topBar = { TopBar(onSearchClick = onSearchClick) }
-    ) { padding ->
-        HomeContent(
-            padding = padding,
-            songs = songs
-        )
+    BackHandler(enabled = drawerState.isOpen) {
+        scope.launch { drawerState.close() }
+    }
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = true,
+        scrimColor = Color.Black.copy(alpha = 0.5f),
+        drawerContent = {
+            DrawerContent(
+                onItemClick = {
+                    scope.launch { drawerState.close() }
+                }
+            )
+        }
+    ) {
+        Scaffold(contentWindowInsets = WindowInsets(0),
+            topBar = {
+                TopBar(
+                    onMenuClick = { scope.launch { drawerState.open() } },
+                    onSearchClick = onSearchClick
+                )
+            }
+        ) { padding ->
+            HomeContent(padding = padding, songs = songs)
+        }
     }
 }
 
@@ -69,7 +96,7 @@ private fun HomeContent(
         MiniPlayer(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = Dimensions.paddingMedium)
+                .padding(bottom = Dimensions.paddingXLarge)
         )
     }
 }
@@ -107,7 +134,7 @@ private fun SortButton(onClick: () -> Unit) {
             painter = painterResource(AppIcons.sort),
             contentDescription = "Sort",
             tint = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.size(30.dp)
+            modifier = Modifier.size(24.dp)
         )
     }
 }
