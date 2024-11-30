@@ -1,0 +1,24 @@
+package com.example.musicplayer.data
+
+import androidx.lifecycle.LiveData
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+
+@Dao
+interface FavoriteDAO {
+  @Insert(onConflict = OnConflictStrategy.IGNORE)
+  suspend fun insertFavorite(favorite: FavoritesSong): Long
+
+  @Delete
+  suspend fun deleteFavorite(favorite: FavoritesSong)
+
+  @Query("SELECT * FROM favorites_table ORDER BY addedTimestamp DESC")
+  fun getAllFavorites(): LiveData<List<FavoritesSong>>
+
+  @Query("SELECT * FROM favorites_table WHERE songId = :songId LIMIT 1")
+  suspend fun getFavoriteBySongId(songId: kotlin.String): FavoritesSong?
+}
