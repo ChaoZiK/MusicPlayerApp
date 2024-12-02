@@ -1,29 +1,29 @@
 package com.example.musicplayer.ui.screens
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.musicplayer.data.Song
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.musicplayer.ui.components.home.*
 import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.components.tabs.TabNav
+import com.example.musicplayer.ui.viewmodel.AudioViewModel
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.coroutines.launch
-
-val songs = listOf(
-    Song("Song 1", "unknown"),
-    Song("Song 2", "unknown"),
-    Song("Song 3", "unknown"),
-    Song("Song 4", "unknown"),
-    Song("Song 5", "unknown"),
-    Song("Song 6", "unknown"),
-    Song("Song 7", "unknown"),
-    Song("Song 8", "unknown"),
-    Song("Song 9", "unknown"),
-    Song("Song 10", "unknown"),
-)
 
 @Composable
 fun HomeScreen(
@@ -32,6 +32,20 @@ fun HomeScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedTab by remember { mutableStateOf(0) }
+    val audioViewModel: AudioViewModel = viewModel()
+    val songs by audioViewModel.songs.observeAsState(emptyList())
+    val context = LocalContext.current
+
+    // Request permissions and fetch songs
+    LaunchedEffect(Unit) {
+        requestAudioPermission(context) { granted ->
+            if (granted) {
+                audioViewModel.fetchSongs()
+            } else {
+                Toast.makeText(context, "Permission denied to access audio files", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     BackHandler(enabled = drawerState.isOpen) {
         scope.launch { drawerState.close() }
@@ -70,3 +84,31 @@ fun HomeScreen(
         }
     }
 }
+
+private fun requestAudioPermission(context: Context, onResult: (Boolean) -> Unit) {
+    val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        Manifest.permission.READ_MEDIA_AUDIO
+    } else {
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    }
+
+    Dexter.withContext(context)
+        .withPermission(permission)
+        .withListener(object : PermissionListener {
+            override fun onPermissionGranted(response: PermissionGrantedResponse?) {
+                onResult(true) // Permission granted
+            }
+
+            override fun onPermissionDenied(response: PermissionDeniedResponse?) {
+                onResult(false) // Permission denied
+                if (response?.isPermanentlyDenied == true) {
+                    Toast.makeText(context, "Permission denied permanently. Enable it in settings.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onPermissionRationaleShouldBeShown(request: PermissionRequest?, token: PermissionToken?) {
+                token?.continuePermissionRequest() // Show default rationale behavior
+            }
+        }).check()
+}
+

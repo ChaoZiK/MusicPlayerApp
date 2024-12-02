@@ -1,30 +1,22 @@
 package com.example.musicplayer.data
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.icu.util.TimeUnit
 import android.media.MediaMetadataRetriever
-import androidx.appcompat.app.AlertDialog
-import com.example.musicplayer.R
-import com.google.android.material.color.MaterialColors
-import kotlin.system.exitProcess
 
 data class Song(
-  val id: String,
+  val id: String ="",
   val title: String,
   val album: String,
   val artist: String,
-  val duration: Long = 0,
+  val duration: String = "",
   val path: String,
-  val artUri: String
+  val artUri: String =""
 )
-fun formatDuration(duration: Long): String{
+/*fun formatDuration(duration: Long): String{
   val minutes = java.util.concurrent.TimeUnit.MINUTES.convert(duration, java.util.concurrent.TimeUnit.MILLISECONDS)
   val seconds = (java.util.concurrent.TimeUnit.SECONDS.convert(duration, java.util.concurrent.TimeUnit.MILLISECONDS) -
     minutes * java.util.concurrent.TimeUnit.SECONDS.convert(1, java.util.concurrent.TimeUnit.MINUTES))
   return String.format("%02d:%02d", minutes, seconds)
-}
+}*/
 fun getImgArt(path: String): ByteArray?{
   val retriever = MediaMetadataRetriever()
   retriever.setDataSource(path)
