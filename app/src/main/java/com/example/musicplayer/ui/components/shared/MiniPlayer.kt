@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components.home
+package com.example.musicplayer.ui.components.shared
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -131,7 +131,7 @@ private fun PlayPauseButton(
     ) {
         Icon(
             painter = painterResource(
-                id = if (isPlaying) AppIcons.pause else AppIcons.play
+                id = if (isPlaying) AppIcons.pause else AppIcons.playFilled
             ),
             contentDescription = if (isPlaying) "Pause" else "Play",
             tint = MaterialTheme.colorScheme.onPrimary,

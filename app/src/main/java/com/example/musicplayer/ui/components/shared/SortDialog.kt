@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components.home
+package com.example.musicplayer.ui.components.shared
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +16,8 @@ import com.example.musicplayer.data.DurationDirection
 import com.example.musicplayer.data.SortDirection
 import com.example.musicplayer.data.SortOption
 import com.example.musicplayer.data.TimeDirection
+import com.example.musicplayer.ui.components.buttons.ActionButton
+import com.example.musicplayer.ui.components.buttons.CancelButton
 
 @Composable
 fun SortDialog(
@@ -188,37 +190,19 @@ fun SortDialog(
                 .padding(20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Button(
+            CancelButton(
                 onClick = onDismiss,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp)
-                    .padding(vertical = 4.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                shape = MaterialTheme.shapes.large
-            ) {
-                Text("CANCEL")
-            }
+                modifier = Modifier.weight(1f)
+            )
 
-            Button(
+            ActionButton(
+                text = "OK",
                 onClick = {
                     onSortOptionSelected(selectedOption, selectedDirection)
                     onDismiss()
                 },
-                modifier = Modifier
-                    .weight(1f)
-                    .height(56.dp)
-                    .padding(vertical = 4.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                ),
-                shape = MaterialTheme.shapes.large
-            ) {
-                Text("OK")
-            }
+                modifier = Modifier.weight(1f)
+            )
         }
     }
 }
