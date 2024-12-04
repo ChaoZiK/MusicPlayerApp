@@ -10,17 +10,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.musicplayer.R
+import com.example.musicplayer.ui.components.buttons.ClearButton
 
 @Composable
 fun SearchTextField(
@@ -28,25 +29,31 @@ fun SearchTextField(
     onSearchTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     BasicTextField(
         value = searchText,
         onValueChange = onSearchTextChanged,
         modifier = modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
             .height(48.dp)
             .animateContentSize(),
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.onSurface),
         textStyle = TextStyle(
             color = MaterialTheme.colorScheme.onSurface,
-            textDecoration = TextDecoration.None,
-            fontSize = 16.sp,
+            fontSize = 16.sp
         ),
-        visualTransformation = VisualTransformation.None,
         keyboardOptions = KeyboardOptions(
             capitalization = KeyboardCapitalization.None,
             autoCorrectEnabled = false,
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Search
         ),
         decorationBox = { innerTextField ->
             SearchTextFieldDecoration(
@@ -84,10 +91,9 @@ private fun SearchTextFieldDecoration(
             }
             innerTextField()
         }
+
         if (searchText.isNotEmpty()) {
-            ClearButton(
-                onClear = { onSearchTextChanged("") }
-            )
+            ClearButton(onClear = { onSearchTextChanged("") })
         }
     }
 }

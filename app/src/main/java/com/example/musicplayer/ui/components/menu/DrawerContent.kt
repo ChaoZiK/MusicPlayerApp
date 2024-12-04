@@ -26,21 +26,6 @@ data class DrawerItemData(
     val onClick: () -> Unit
 )
 
-val playlists = listOf(
-    Playlist("1", "My Rock Playlist"),
-    Playlist("2", "Chill Music"),
-    Playlist("3", "Workout Mix"),
-    Playlist("4", "Road Trip Songs"),
-    Playlist("5", "90s Hits"),
-    Playlist("6", "Study Music"),
-    Playlist("7", "Party Mix"),
-    Playlist("8", "Acoustic Covers"),
-    Playlist("9", "90s Hits"),
-    Playlist("10", "Study Music"),
-    Playlist("11", "Party Mix"),
-    Playlist("12", "Acoustic Covers")
-)
-
 @Composable
 fun DrawerContent(
     onItemClick: (String) -> Unit
