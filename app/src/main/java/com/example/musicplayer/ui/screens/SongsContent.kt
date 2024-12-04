@@ -36,6 +36,7 @@ import com.example.musicplayer.ui.components.home.ControlButtons
 import com.example.musicplayer.ui.components.home.MiniPlayer
 import com.example.musicplayer.ui.components.home.SongList
 import com.example.musicplayer.ui.components.home.SongOptionsSheet
+import com.example.musicplayer.ui.components.home.SortDialog
 import com.example.musicplayer.ui.theme.AppIcons
 import com.example.musicplayer.ui.theme.Dimensions
 
@@ -48,6 +49,7 @@ fun SongsContent(
 
     var showOptions by remember { mutableStateOf(false) }
     var selectedSong by remember { mutableStateOf<Song?>(null) }
+    var showSortDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -55,8 +57,10 @@ fun SongsContent(
             .padding(padding)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Header(songCount = songs.size)
-
+            Header(
+                songCount = songs.size,
+                onSortClick = { showSortDialog = true }
+            )
             ControlButtons(
                 onShuffleClick = { },
                 onPlayClick = { }
@@ -107,11 +111,40 @@ fun SongsContent(
                 )
             }
         }
+        if (showSortDialog) {
+            ModalBottomSheet(
+                onDismissRequest = { showSortDialog = false },
+                containerColor = MaterialTheme.colorScheme.surface,
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                dragHandle = {
+                    Box(
+                        Modifier
+                            .padding(top = 15.dp, bottom = 5.dp)
+                            .width(44.dp)
+                            .height(4.dp)
+                            .background(
+                                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                                MaterialTheme.shapes.small
+                            )
+                    )
+                }
+            ) {
+                SortDialog(
+                    onDismiss = { showSortDialog = false },
+                    onSortOptionSelected = { option, direction ->
+                        // Handle sorting
+                        //handleSorting(option, direction)
+
+                        showSortDialog = false
+                    }
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun Header(songCount: Int) {
+private fun Header(songCount: Int,  onSortClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,7 +160,7 @@ private fun Header(songCount: Int) {
             ),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        SortButton(onClick = { })
+        SortButton(onClick = onSortClick)
     }
 }
 
