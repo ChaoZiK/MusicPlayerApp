@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components.tabs
+package com.example.musicplayer.ui.components.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically

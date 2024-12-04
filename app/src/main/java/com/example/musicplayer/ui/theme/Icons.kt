@@ -5,6 +5,7 @@ import com.example.musicplayer.R
 object AppIcons {
     val shuffle = R.drawable.ic_shuffle
     val play = R.drawable.ic_play
+    val playFilled = R.drawable.ic_play_filled
     val pause = R.drawable.ic_pause
     val menuBurger = R.drawable.ic_menu_burger
     val search = R.drawable.ic_search
@@ -19,4 +20,10 @@ object AppIcons {
     val history = R.drawable.ic_history
     val playlists = R.drawable.ic_playlists
     val settings = R.drawable.ic_settings
+    val addToQueue = R.drawable.ic_add_to_queue
+    val bell = R.drawable.ic_bell
+    val image = R.drawable.ic_image
+    val nextSong = R.drawable.ic_next_song
+    val trash = R.drawable.ic_trash
+    val edit = R.drawable.ic_edit
 }
