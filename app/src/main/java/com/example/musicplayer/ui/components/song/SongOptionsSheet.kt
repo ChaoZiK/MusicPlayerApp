@@ -5,110 +5,153 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.musicplayer.data.Song
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
-import androidx.compose.ui.Alignment
-import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.musicplayer.ui.components.buttons.CloseButton
 import com.example.musicplayer.ui.components.shared.BaseBottomSheet
 import com.example.musicplayer.ui.theme.AppIcons
-import com.example.musicplayer.ui.theme.AppShapes
 
 @Composable
 fun SongOptionsSheet(
     song: Song,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onInfoClick: () -> Unit
 ) {
     BaseBottomSheet(
         title = song.title,
         subtitle = song.artist,
+        trailingContent = {
+            IconButton(onClick = onInfoClick) {
+                Icon(
+                    painter = painterResource(AppIcons.info),
+                    contentDescription = "Song Info",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
+        },
         onDismiss = onDismiss
     ) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
             ListItem(
-                headlineContent = { Text("Play next") },
+                headlineContent = {
+                    Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Text("Play next")
+                    }
+                },
                 leadingContent = {
-                    Icon(
-                        painter = painterResource(AppIcons.nextSong),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+                    Box(modifier = Modifier.padding(start = 20.dp)) {
+                        Icon(
+                            painter = painterResource(AppIcons.nextSong),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 },
                 modifier = Modifier.clickable { onDismiss() }
             )
 
             ListItem(
-                headlineContent = { Text("Add to queue") },
+                headlineContent = {
+                    Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Text("Add to queue")
+                    }
+                },
                 leadingContent = {
-                    Icon(
-                        painter = painterResource(AppIcons.addToQueue),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+                    Box(modifier = Modifier.padding(start = 20.dp)) {
+                        Icon(
+                            painter = painterResource(AppIcons.addToQueue),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 },
                 modifier = Modifier.clickable { onDismiss() }
             )
 
             ListItem(
-                headlineContent = { Text("Add to playlist") },
+                headlineContent = {
+                    Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Text("Add to playlist")
+                    }
+                },
                 leadingContent = {
-                    Icon(
-                        painter = painterResource(AppIcons.addToPlaylist),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+                    Box(modifier = Modifier.padding(start = 20.dp)) {
+                        Icon(
+                            painter = painterResource(AppIcons.addToPlaylist),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 },
                 modifier = Modifier.clickable { onDismiss() }
             )
         }
 
         HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
 
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
             ListItem(
-                headlineContent = { Text("Change cover") },
+                headlineContent = {
+                    Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Text("Change cover")
+                    }
+                },
                 leadingContent = {
-                    Icon(
-                        painter = painterResource(AppIcons.image),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+                    Box(modifier = Modifier.padding(start = 20.dp)) {
+                        Icon(
+                            painter = painterResource(AppIcons.image),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 },
                 modifier = Modifier.clickable { onDismiss() }
             )
 
             ListItem(
-                headlineContent = { Text("Set as ringtone") },
+                headlineContent = {
+                    Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Text("Set as ringtone")
+                    }
+                },
                 leadingContent = {
-                    Icon(
-                        painter = painterResource(AppIcons.bell),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+                    Box(modifier = Modifier.padding(start = 20.dp)) {
+                        Icon(
+                            painter = painterResource(AppIcons.bell),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 },
                 modifier = Modifier.clickable { onDismiss() }
             )
         }
 
         HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
 
-        Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 2.dp)) {
+        Column(modifier = Modifier.padding(vertical = 8.dp)) {
             ListItem(
-                headlineContent = { Text("Delete from device") },
+                headlineContent = {
+                    Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                        Text("Delete from device")
+                    }
+                },
                 leadingContent = {
-                    Icon(
-                        painter = painterResource(AppIcons.trash),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
+                    Box(modifier = Modifier.padding(start = 20.dp)) {
+                        Icon(
+                            painter = painterResource(AppIcons.trash),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                 },
                 modifier = Modifier.clickable { onDismiss() }
             )

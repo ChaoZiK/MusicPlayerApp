@@ -27,6 +27,7 @@ import com.example.musicplayer.ui.components.song.SongOptionsSheet
 import com.example.musicplayer.ui.components.shared.SortDialog
 import com.example.musicplayer.ui.components.playlist.PlaylistDetailTopBar
 import com.example.musicplayer.ui.components.shared.EmptyList
+import com.example.musicplayer.ui.components.song.SongBottomSheetsManager
 import com.example.musicplayer.ui.components.song.SongsHeader
 import com.example.musicplayer.ui.theme.Dimensions
 
@@ -41,6 +42,7 @@ fun PlaylistDetailScreen(
     var showOptions by remember { mutableStateOf(false) }
     var selectedSong by remember { mutableStateOf<Song?>(null) }
     var showSortDialog by remember { mutableStateOf(false) }
+    var showDetails by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -90,36 +92,24 @@ fun PlaylistDetailScreen(
                 .padding(bottom = Dimensions.paddingXLarge)
         )
 
-        if (showOptions && selectedSong != null) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    showOptions = false
-                    selectedSong = null
-                },
-                containerColor = MaterialTheme.colorScheme.surface,
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-                dragHandle = {
-                    Box(
-                        Modifier
-                            .padding(top = 15.dp, bottom = 5.dp)
-                            .width(44.dp)
-                            .height(4.dp)
-                            .background(
-                                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                MaterialTheme.shapes.small
-                            )
-                    )
-                }
-            ) {
-                SongOptionsSheet(
-                    song = selectedSong!!,
-                    onDismiss = {
-                        showOptions = false
-                        selectedSong = null
-                    }
-                )
+        SongBottomSheetsManager(
+            selectedSong = selectedSong,
+            showOptions = showOptions,
+            showDetails = showDetails,
+            onOptionsDismiss = {
+                showOptions = false
+                selectedSong = null
+            },
+            onDetailsClick = {
+                showOptions = false
+                showDetails = true
+            },
+            onDetailsDismiss = {
+                showDetails = false
+                selectedSong = null
             }
-        }
+        )
+
         if (showSortDialog) {
             ModalBottomSheet(
                 onDismissRequest = { showSortDialog = false },

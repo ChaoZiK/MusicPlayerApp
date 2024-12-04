@@ -39,52 +39,75 @@ fun DefaultPlaylistOptionsSheet(
         onDismiss = onDismiss
     ) {
         ListItem(
-            headlineContent = { Text("Play") },
+            headlineContent = {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Text("Play")
+                }
+            },
             leadingContent = {
-                Icon(
-                    painter = painterResource(AppIcons.play),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Box(modifier = Modifier.padding(start = 20.dp)) {
+                    Icon(
+                        painter = painterResource(AppIcons.play),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             modifier = Modifier.clickable { onDismiss() }
         )
 
         ListItem(
-            headlineContent = { Text("Play next") },
+            headlineContent = {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Text("Play next")
+                }
+            },
             leadingContent = {
-                Icon(
-                    painter = painterResource(AppIcons.nextSong),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Box(modifier = Modifier.padding(start = 20.dp)) {
+                    Icon(
+                        painter = painterResource(AppIcons.nextSong),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             modifier = Modifier.clickable { onDismiss() }
         )
 
         ListItem(
-            headlineContent = { Text("Add to queue") },
+            headlineContent = {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Text("Add to queue")
+                }
+            },
             leadingContent = {
-                Icon(
-                    painter = painterResource(AppIcons.addToQueue),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Box(modifier = Modifier.padding(start = 20.dp)) {
+                    Icon(
+                        painter = painterResource(AppIcons.addToQueue),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             modifier = Modifier.clickable { onDismiss() }
         )
 
         ListItem(
-            headlineContent = { Text("Add to playlist") },
+            headlineContent = {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Text("Add to playlist")
+                }
+            },
             leadingContent = {
-                Icon(
-                    painter = painterResource(AppIcons.addToPlaylist),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Box(modifier = Modifier.padding(start = 20.dp)) {
+                    Icon(
+                        painter = painterResource(AppIcons.addToPlaylist),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             modifier = Modifier.clickable { onDismiss() }
         )
-
     }
 }

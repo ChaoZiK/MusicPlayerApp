@@ -26,6 +26,8 @@ import com.example.musicplayer.ui.components.shared.MiniPlayer
 import com.example.musicplayer.ui.components.song.SongList
 import com.example.musicplayer.ui.components.song.SongOptionsSheet
 import com.example.musicplayer.ui.components.shared.SortDialog
+import com.example.musicplayer.ui.components.song.SongBottomSheetsManager
+import com.example.musicplayer.ui.components.song.SongDetailsSheet
 import com.example.musicplayer.ui.components.song.SongsHeader
 import com.example.musicplayer.ui.theme.Dimensions
 
@@ -39,6 +41,7 @@ fun SongsContent(
     var showOptions by remember { mutableStateOf(false) }
     var selectedSong by remember { mutableStateOf<Song?>(null) }
     var showSortDialog by remember { mutableStateOf(false) }
+    var showDetails by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -70,36 +73,44 @@ fun SongsContent(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = Dimensions.paddingXLarge)
         )
-        if (showOptions && selectedSong != null) {
+
+        SongBottomSheetsManager(
+            selectedSong = selectedSong,
+            showOptions = showOptions,
+            showDetails = showDetails,
+            onOptionsDismiss = {
+                showOptions = false
+                selectedSong = null
+            },
+            onDetailsClick = {
+                showOptions = false
+                showDetails = true
+            },
+            onDetailsDismiss = {
+                showDetails = false
+                selectedSong = null
+            }
+        )
+
+        if (showDetails && selectedSong != null) {
             ModalBottomSheet(
                 onDismissRequest = {
-                    showOptions = false
+                    showDetails = false
                     selectedSong = null
                 },
                 containerColor = MaterialTheme.colorScheme.surface,
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-                dragHandle = {
-                    Box(
-                        Modifier
-                            .padding(top = 15.dp, bottom = 5.dp)
-                            .width(44.dp)
-                            .height(4.dp)
-                            .background(
-                                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                                MaterialTheme.shapes.small
-                            )
-                    )
-                }
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             ) {
-                SongOptionsSheet(
+                SongDetailsSheet(
                     song = selectedSong!!,
                     onDismiss = {
-                        showOptions = false
+                        showDetails = false
                         selectedSong = null
                     }
                 )
             }
         }
+
         if (showSortDialog) {
             ModalBottomSheet(
                 onDismissRequest = { showSortDialog = false },

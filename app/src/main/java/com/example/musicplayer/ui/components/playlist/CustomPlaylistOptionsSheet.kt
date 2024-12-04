@@ -39,42 +39,61 @@ fun CustomPlaylistOptionsSheet(
         onDismiss = onDismiss
     ) {
         ListItem(
-            headlineContent = { Text("Rename") },
+            headlineContent = {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Text("Rename")
+                }
+            },
             leadingContent = {
-                Icon(
-                    painter = painterResource(AppIcons.edit),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Box(modifier = Modifier.padding(start = 20.dp)) {
+                    Icon(
+                        painter = painterResource(AppIcons.edit),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             modifier = Modifier.clickable { onDismiss() }
         )
 
         ListItem(
-            headlineContent = { Text("Change cover") },
+            headlineContent = {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Text("Change cover")
+                }
+            },
             leadingContent = {
-                Icon(
-                    painter = painterResource(AppIcons.image),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Box(modifier = Modifier.padding(start = 20.dp)) {
+                    Icon(
+                        painter = painterResource(AppIcons.image),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             modifier = Modifier.clickable { onDismiss() }
         )
 
         HorizontalDivider(
-            modifier = Modifier.padding(vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
+
         ListItem(
-            headlineContent = { Text("Delete") },
+            headlineContent = {
+                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
+                    Text("Delete")
+                }
+            },
             leadingContent = {
-                Icon(
-                    painter = painterResource(AppIcons.trash),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                Box(modifier = Modifier.padding(start = 20.dp)) {
+                    Icon(
+                        painter = painterResource(AppIcons.trash),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             modifier = Modifier.clickable { onDismiss() }
         )
