@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import com.example.musicplayer.data.Song
 import com.example.musicplayer.ui.components.home.*
 import com.example.musicplayer.ui.components.menu.DrawerContent
-import com.example.musicplayer.ui.components.tabs.TabNav
+import com.example.musicplayer.ui.components.home.TabNav
 import kotlinx.coroutines.launch
 
 val songs = listOf(
@@ -31,7 +31,7 @@ fun HomeScreen(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableIntStateOf(0) }
 
     BackHandler(enabled = drawerState.isOpen) {
         scope.launch { drawerState.close() }
