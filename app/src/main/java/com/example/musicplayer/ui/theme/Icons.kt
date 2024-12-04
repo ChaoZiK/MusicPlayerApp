@@ -19,4 +19,9 @@ object AppIcons {
     val history = R.drawable.ic_history
     val playlists = R.drawable.ic_playlists
     val settings = R.drawable.ic_settings
+    val addToQueue = R.drawable.ic_add_to_queue
+    val bell = R.drawable.ic_bell
+    val image = R.drawable.ic_image
+    val nextSong = R.drawable.ic_next_song
+    val trash = R.drawable.ic_trash
 }
