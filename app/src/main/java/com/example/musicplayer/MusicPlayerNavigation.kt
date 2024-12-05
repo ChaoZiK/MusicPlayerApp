@@ -17,14 +17,16 @@ import com.example.musicplayer.data.defaultPlaylists
 import com.example.musicplayer.ui.screens.HomeScreen
 import com.example.musicplayer.ui.screens.PlaylistDetailScreen
 import com.example.musicplayer.ui.screens.SearchScreen
-import com.example.musicplayer.ui.theme.AppIcons.playlist
 import com.example.musicplayer.ui.viewmodel.SearchViewModel
 
 @Composable
-fun MusicPlayerNavigation() {
+fun MusicPlayerNavigation(
+    miniPlayerContent: @Composable (Boolean) -> Unit
+) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val viewModel: SearchViewModel = hiltViewModel()
+    val showMiniPlayer = currentBackStackEntry?.destination?.route != "search"
 
     NavHost(
         navController = navController,
@@ -69,6 +71,7 @@ fun MusicPlayerNavigation() {
             }
         }
     }
+    miniPlayerContent(showMiniPlayer)
 }
 
 @Composable

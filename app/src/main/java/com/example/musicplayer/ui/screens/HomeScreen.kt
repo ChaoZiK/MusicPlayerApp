@@ -77,14 +77,16 @@ fun HomeScreen(
                     )
                 }
             }
-        ) { padding ->
+        ) { innerPadding ->
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
             ) { page ->
                 when (page) {
-                    0 -> SongsContent(padding = padding, songs = sampleSongs)
-                    1 -> PlaylistContent(padding = padding, navController = navController)
+                    0 -> SongsContent(songs = sampleSongs)
+                    1 -> PlaylistContent(navController = navController)
                 }
             }
         }

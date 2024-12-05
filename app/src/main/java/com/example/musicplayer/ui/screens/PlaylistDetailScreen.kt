@@ -80,12 +80,6 @@ fun PlaylistDetailScreen(
             }
         }
 
-        MiniPlayer(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = Dimensions.paddingXLarge)
-        )
-
         SongBottomSheetsManager(
             selectedSong = selectedSong,
             showOptions = showOptions,

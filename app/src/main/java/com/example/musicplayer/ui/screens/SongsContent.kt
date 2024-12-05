@@ -34,7 +34,6 @@ import com.example.musicplayer.ui.theme.Dimensions
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongsContent(
-    padding: PaddingValues,
     songs: List<Song>
 ) {
 
@@ -46,7 +45,6 @@ fun SongsContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             SongsHeader(
@@ -67,12 +65,6 @@ fun SongsContent(
                 }
             )
         }
-
-        MiniPlayer(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = Dimensions.paddingXLarge)
-        )
 
         SongBottomSheetsManager(
             selectedSong = selectedSong,

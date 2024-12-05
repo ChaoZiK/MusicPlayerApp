@@ -20,7 +20,6 @@ import com.example.musicplayer.ui.components.playlist.DefaultPlaylistOptionsShee
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistContent(
-    padding: PaddingValues,
     navController: NavController
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
@@ -30,7 +29,6 @@ fun PlaylistContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             PlaylistHeader(
