@@ -26,21 +26,6 @@ data class DrawerItemData(
     val onClick: () -> Unit
 )
 
-val playlists = listOf(
-    Playlist("1", "My Rock Playlist"),
-    Playlist("2", "Chill Music"),
-    Playlist("3", "Workout Mix"),
-    Playlist("4", "Road Trip Songs"),
-    Playlist("5", "90s Hits"),
-    Playlist("6", "Study Music"),
-    Playlist("7", "Party Mix"),
-    Playlist("8", "Acoustic Covers"),
-    Playlist("9", "90s Hits"),
-    Playlist("10", "Study Music"),
-    Playlist("11", "Party Mix"),
-    Playlist("12", "Acoustic Covers")
-)
-
 @Composable
 fun DrawerContent(
     onItemClick: (String) -> Unit
@@ -74,62 +59,46 @@ fun DrawerContent(
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 25.dp),
                 thickness = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface.copy(0.5f)
             )
+
+            Spacer(modifier = Modifier.weight(0.5f))
+
 
             DrawerItem(
                 item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.favourite)),
-                    label = "Favorites"
+                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.info)),
+                    label = "Information"
                 ) {
-                    selectedItem = "favorite"
-                    onItemClick("favorite")
+                    selectedItem = "information"
+                    onItemClick("information")
                 },
                 selectedItem = selectedItem
             )
 
             DrawerItem(
                 item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.history)),
-                    label = "Recently Played"
+                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.feedback)),
+                    label = "Feedback"
                 ) {
-                    selectedItem = "recent"
-                    onItemClick("recent")
+                    selectedItem = "feedback"
+                    onItemClick("feedback")
                 },
                 selectedItem = selectedItem,
             )
 
             DrawerItem(
                 item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.playlists)),
-                    label = "Playlists"
+                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.exit)),
+                    label = "Exit"
                 ) {
-                    selectedItem = "playlists"
-                    onItemClick("playlists")
+                    selectedItem = "exit"
+                    onItemClick("exit")
                 },
                 selectedItem = selectedItem
             )
 
             Spacer(modifier = Modifier.weight(1f))
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .align(Alignment.CenterHorizontally),
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
-            DrawerItem(
-                item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.settings)),
-                    label = "Settings"
-                ) {
-                    selectedItem = "settings"
-                    onItemClick("settings")
-                },
-                selectedItem = selectedItem
-            )
         }
     }
 }
