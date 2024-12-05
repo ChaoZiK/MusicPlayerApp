@@ -10,7 +10,12 @@ import kotlinx.coroutines.launch
 class HomeViewModel : ViewModel() {
     private val _songs = MutableStateFlow<List<Song>>(emptyList())
     val songs = _songs.asStateFlow()
+    private val _selectedTab = MutableStateFlow(0)
+    val selectedTab = _selectedTab.asStateFlow()
 
+    fun setSelectedTab(tab: Int) {
+        _selectedTab.value = tab
+    }
     fun loadSongs() {
         viewModelScope.launch {
         }

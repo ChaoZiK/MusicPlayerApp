@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.musicplayer.data.Playlist
 import com.example.musicplayer.ui.components.shared.ListItemContent
+import com.example.musicplayer.ui.components.shared.PlaylistIconCard
 
 @Composable
 fun PlaylistItem(
@@ -21,7 +22,10 @@ fun PlaylistItem(
             title = playlist.title,
             subtitle = "${playlist.songCount} songs",
             onMoreClick = { onMoreClick(playlist) },
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
+            leftContent = {
+                PlaylistIconCard(playlist = playlist)
+            }
         )
     }
 }

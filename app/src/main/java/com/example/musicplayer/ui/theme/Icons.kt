@@ -14,6 +14,7 @@ object AppIcons {
     val arrowBack = R.drawable.ic_arrow_left
     val crossCircle = R.drawable.ic_cross_circle
     val favourite = R.drawable.ic_heart
+    val favouriteFilled = R.drawable.ic_heart_filled
     val addToPlaylist = R.drawable.ic_add_to_playlist
     val playlist = R.drawable.ic_playlist
     val history = R.drawable.ic_history

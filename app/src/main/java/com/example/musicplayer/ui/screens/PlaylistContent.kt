@@ -88,7 +88,7 @@ fun PlaylistContent(
     if (showAddDialog) {
         AddPlaylistDialog(
             onDismiss = { showAddDialog = false },
-            onCreatePlaylist = { name ->
+            onCreatePlaylist = {
                 // Handle playlist creation
                 showAddDialog = false
             }
