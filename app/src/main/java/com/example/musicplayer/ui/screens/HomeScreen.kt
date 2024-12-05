@@ -16,15 +16,19 @@ import com.example.musicplayer.ui.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
 fun HomeScreen(
     onSearchClick: () -> Unit,
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    miniPlayerViewModel: MiniPlayerViewModel,
+    onMenuClick: () -> Unit
 ) {
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
     val selectedTab by viewModel.selectedTab.collectAsState()
 
     val pagerState = rememberPagerState(
@@ -40,60 +44,42 @@ fun HomeScreen(
         viewModel.setSelectedTab(pagerState.currentPage)
     }
 
-    BackHandler(enabled = drawerState.isOpen) {
-        scope.launch { drawerState.close() }
-    }
-
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
-        drawerContent = {
-            DrawerContent(
-                onItemClick = {
-                    scope.launch { drawerState.close() }
-                }
-            )
-        }
-    ) {
-        Scaffold(
-            contentWindowInsets = WindowInsets(0),
-            topBar = {
-                Column(
-                    modifier = Modifier.padding(bottom = 10.dp)
-                ) {
-                    HomeTopBar(
-                        onMenuClick = { scope.launch { drawerState.open() } },
-                        onSearchClick = onSearchClick
-                    )
-                    TabNav(
-                        selectedTab = selectedTab,
-                        onTabSelected = {
-                            scope.launch {
-                                pagerState.animateScrollToPage(it)
-                            }
-                        }
-                    )
-                }
+    Scaffold(
+        contentWindowInsets = WindowInsets(0),
+        topBar = {
+            Column(
+                modifier = Modifier.padding(bottom = 10.dp)
+            ) {
+                HomeTopBar(
+                    onMenuClick = onMenuClick,
+                    onSearchClick = onSearchClick
+                )
+                TabNav(
+                    selectedTab = selectedTab,
+                    onTabSelected = {
+                        viewModel.setSelectedTab(it)
+                    }
+                )
             }
-        ) { innerPadding ->
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) { page ->
-                when (page) {
-                    0 -> SongsScreen(
-                        songs = sampleSongs,
-                        onSongClick = { song ->
-                            // Handle song click
-                        },
-                        onSortSelected = { option, direction ->
-                            // Handle sort
-                        },
-                    )
-                    1 -> PlaylistScreen(navController = navController)
-                }
+        }
+    ) { innerPadding ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) { page ->
+            when (page) {
+                0 -> SongsScreen(
+                    songs = sampleSongs,
+                    onSongClick = { song ->
+                        miniPlayerViewModel.updateSong(song)
+                    },
+                    onSortSelected = { option, direction ->
+                        // Handle sort
+                    }
+                )
+                1 -> PlaylistScreen(navController = navController)
             }
         }
     }
