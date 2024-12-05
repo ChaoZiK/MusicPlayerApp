@@ -12,7 +12,10 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,9 +27,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.musicplayer.data.customPlaylists
 import com.example.musicplayer.data.defaultPlaylists
+import com.example.musicplayer.ui.components.dialogs.ExitDialog
 import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.components.shared.MiniPlayer
+import com.example.musicplayer.ui.screens.FeedbackScreen
 import com.example.musicplayer.ui.screens.HomeScreen
+import com.example.musicplayer.ui.screens.InformationScreen
 import com.example.musicplayer.ui.screens.PlaylistDetailScreen
 import com.example.musicplayer.ui.screens.SearchScreen
 import com.example.musicplayer.ui.theme.Dimensions
@@ -47,14 +53,21 @@ fun MusicPlayerApp() {
     val miniPlayerViewModel: MiniPlayerViewModel = hiltViewModel()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var showExitDialog by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
         drawerContent = {
             DrawerContent(
-                onItemClick = {
-                    scope.launch { drawerState.close() }
+                onItemClick = { route ->
+                    scope.launch { drawerState.close()
+                        when (route) {
+                            "information" -> navController.navigate("information")
+                            "feedback" -> navController.navigate("feedback")
+                            "exit" -> showExitDialog = true
+                        }
+                    }
                 }
             )
         }
@@ -112,6 +125,21 @@ fun MusicPlayerApp() {
                         }
                     }
                 }
+                composable("information") {
+                    AnimatedScreen(visible = currentEntry?.destination?.route == "information") {
+                        InformationScreen(
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    }
+                }
+
+                composable("feedback") {
+                    AnimatedScreen(visible = currentEntry?.destination?.route == "feedback") {
+                        FeedbackScreen(
+                            onBackClick = { navController.navigateUp() }
+                        )
+                    }
+                }
             }
 
             if (showMiniPlayer) {
@@ -120,6 +148,15 @@ fun MusicPlayerApp() {
                         .align(Alignment.BottomCenter)
                         .padding(bottom = Dimensions.paddingXLarge),
                     viewModel = miniPlayerViewModel
+                )
+            }
+
+            if (showExitDialog) {
+                ExitDialog(
+                    onDismiss = { showExitDialog = false },
+                    onConfirm = {
+                        android.os.Process.killProcess(android.os.Process.myPid())
+                    }
                 )
             }
         }

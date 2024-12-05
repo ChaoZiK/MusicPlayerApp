@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.musicplayer.ui.components.buttons.BackButton
 import com.example.musicplayer.ui.theme.Dimensions
 
 @Composable
@@ -29,7 +30,7 @@ fun SearchBar(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            SearchBackButton(
+            BackButton(
                 onBackClick = onBackClick,
                 modifier = Modifier.size(40.dp)
             )

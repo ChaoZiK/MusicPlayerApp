@@ -1,6 +1,5 @@
 package com.example.musicplayer.ui.screens
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,10 +9,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.musicplayer.data.sampleSongs
 import com.example.musicplayer.ui.components.home.*
-import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.components.home.TabNav
 import com.example.musicplayer.ui.viewmodel.HomeViewModel
-import kotlinx.coroutines.launch
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.fillMaxSize

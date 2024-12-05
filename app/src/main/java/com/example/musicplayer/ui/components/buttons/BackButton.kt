@@ -10,11 +10,11 @@ import com.example.musicplayer.ui.theme.AppIcons
 
 @Composable
 fun BackButton(
-    onClick: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     IconButton(
-        onClick = onClick,
+        onClick = onBackClick,
         modifier = modifier.size(40.dp)
     ) {
         Icon(

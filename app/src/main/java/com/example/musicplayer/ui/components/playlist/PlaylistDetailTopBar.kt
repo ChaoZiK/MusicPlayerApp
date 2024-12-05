@@ -19,7 +19,7 @@ fun PlaylistDetailTopBar(
 ) {
     BaseTopBar {
         BackButton(
-            onClick = onBackClick,
+            onBackClick = onBackClick,
             modifier = Modifier.align(Alignment.CenterStart)
         )
 
