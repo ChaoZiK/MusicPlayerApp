@@ -1,9 +1,9 @@
-package com.example.musicplayer.ui.screens
+package com.example.musicplayer.ui.components.shared
 
+import com.example.musicplayer.ui.components.sheets.SongDetailsSheet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,53 +17,74 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.musicplayer.data.Song
-import com.example.musicplayer.ui.components.shared.ControlButtons
-import com.example.musicplayer.ui.components.shared.MiniPlayer
+import com.example.musicplayer.data.SortDirection
+import com.example.musicplayer.data.SortOption
 import com.example.musicplayer.ui.components.song.SongList
-import com.example.musicplayer.ui.components.song.SongOptionsSheet
-import com.example.musicplayer.ui.components.shared.SortDialog
-import com.example.musicplayer.ui.components.song.SongBottomSheetsManager
-import com.example.musicplayer.ui.components.song.SongDetailsSheet
+import com.example.musicplayer.ui.components.sheets.SortSheet
+import com.example.musicplayer.ui.components.playlist.PlaylistDetailTopBar
+import com.example.musicplayer.ui.components.sheets.SongBottomSheetsManager
 import com.example.musicplayer.ui.components.song.SongsHeader
-import com.example.musicplayer.ui.theme.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SongsContent(
-    songs: List<Song>
+fun SongsContentLayout(
+    songs: List<Song>,
+    modifier: Modifier = Modifier,
+    showTopBar: Boolean = false,
+    topBarTitle: String = "",
+    onBackPressed: (() -> Unit)? = null,
+    onSearchClick: (() -> Unit)? = null,
+    onSongClick: ((Song) -> Unit)? = null,
+    onShuffleClick: (() -> Unit)? = null,
+    onPlayClick: (() -> Unit)? = null,
+    onSortSelected: ((SortOption, SortDirection) -> Unit)? = null,
 ) {
-
     var showOptions by remember { mutableStateOf(false) }
     var selectedSong by remember { mutableStateOf<Song?>(null) }
     var showSortDialog by remember { mutableStateOf(false) }
     var showDetails by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
+            if (showTopBar) {
+                PlaylistDetailTopBar(
+                    onBackClick = { onBackPressed?.invoke() },
+                    playlistTitle = topBarTitle,
+                    onSearchClick = { onSearchClick?.invoke() }
+                )
+            }
+
             SongsHeader(
                 songCount = songs.size,
                 onSortClick = { showSortDialog = true }
             )
-            ControlButtons(
-                onShuffleClick = { },
-                onPlayClick = { }
-            )
 
-            SongList(
-                songs = songs,
-                onSongClick = { },
-                onMoreClick = { song ->
-                    selectedSong = song
-                    showOptions = true
-                }
-            )
+            if (songs.isEmpty()) {
+                EmptyList(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(vertical = 32.dp)
+                )
+            } else {
+                ControlButtonsLayout(
+                    onShuffleClick = { onShuffleClick?.invoke() },
+                    onPlayClick = { onPlayClick?.invoke() }
+                )
+
+                SongList(
+                    songs = songs,
+                    onSongClick = { song -> onSongClick?.invoke(song) },
+                    onMoreClick = { song ->
+                        selectedSong = song
+                        showOptions = true
+                    }
+                )
+            }
         }
 
         SongBottomSheetsManager(
@@ -84,25 +105,6 @@ fun SongsContent(
             }
         )
 
-        if (showDetails && selectedSong != null) {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    showDetails = false
-                    selectedSong = null
-                },
-                containerColor = MaterialTheme.colorScheme.surface,
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-            ) {
-                SongDetailsSheet(
-                    song = selectedSong!!,
-                    onDismiss = {
-                        showDetails = false
-                        selectedSong = null
-                    }
-                )
-            }
-        }
-
         if (showSortDialog) {
             ModalBottomSheet(
                 onDismissRequest = { showSortDialog = false },
@@ -121,17 +123,33 @@ fun SongsContent(
                     )
                 }
             ) {
-                SortDialog(
+                SortSheet(
                     onDismiss = { showSortDialog = false },
                     onSortOptionSelected = { option, direction ->
-                        // Handle sorting
-                        //handleSorting(option, direction)
-
+                        onSortSelected?.invoke(option, direction)
                         showSortDialog = false
+                    }
+                )
+            }
+        }
+
+        if (showDetails && selectedSong != null) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showDetails = false
+                    selectedSong = null
+                },
+                containerColor = MaterialTheme.colorScheme.surface,
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            ) {
+                SongDetailsSheet(
+                    song = selectedSong!!,
+                    onDismiss = {
+                        showDetails = false
+                        selectedSong = null
                     }
                 )
             }
         }
     }
 }
-

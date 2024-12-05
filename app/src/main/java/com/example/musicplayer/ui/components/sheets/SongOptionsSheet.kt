@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components.song
+package com.example.musicplayer.ui.components.sheets
 
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable

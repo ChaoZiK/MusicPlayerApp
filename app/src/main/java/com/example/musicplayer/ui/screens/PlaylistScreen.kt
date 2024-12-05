@@ -14,12 +14,12 @@ import com.example.musicplayer.data.defaultPlaylists
 import com.example.musicplayer.ui.components.playlist.AddPlaylistDialog
 import com.example.musicplayer.ui.components.playlist.PlaylistHeader
 import com.example.musicplayer.ui.components.playlist.PlaylistItem
-import com.example.musicplayer.ui.components.playlist.CustomPlaylistOptionsSheet
-import com.example.musicplayer.ui.components.playlist.DefaultPlaylistOptionsSheet
+import com.example.musicplayer.ui.components.sheets.CustomPlaylistOptionsSheet
+import com.example.musicplayer.ui.components.sheets.DefaultPlaylistOptionsSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlaylistContent(
+fun PlaylistScreen(
     navController: NavController
 ) {
     var showAddDialog by remember { mutableStateOf(false) }

@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components.shared
+package com.example.musicplayer.ui.components.sheets
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +20,7 @@ import com.example.musicplayer.ui.components.buttons.ActionButton
 import com.example.musicplayer.ui.components.buttons.CancelButton
 
 @Composable
-fun SortDialog(
+fun SortSheet(
     onDismiss: () -> Unit,
     onSortOptionSelected: (SortOption, SortDirection) -> Unit
 ) {

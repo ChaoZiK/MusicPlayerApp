@@ -1,4 +1,4 @@
-package com.example.musicplayer.ui.components.song
+package com.example.musicplayer.ui.components.sheets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

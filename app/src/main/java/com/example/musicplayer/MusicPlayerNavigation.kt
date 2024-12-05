@@ -38,7 +38,8 @@ fun MusicPlayerNavigation(
                     onSearchClick = {
                         viewModel.activateSearch()
                         navController.navigate("search")
-                    }, navController = navController
+                    },
+                    navController = navController,
                 )
             }
         }
@@ -65,6 +66,12 @@ fun MusicPlayerNavigation(
                         onSearchClick = {
                             viewModel.activateSearch()
                             navController.navigate("search")
+                        },
+                        onSongClick = { song ->
+
+                        },
+                        onSortSelected = { option, direction ->
+
                         }
                     )
                 }

@@ -27,13 +27,11 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val selectedTab by viewModel.selectedTab.collectAsState()
 
-    // Thêm pagerState
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { 2 }
     )
 
-    // Sync giữa pager và tab
     LaunchedEffect(selectedTab) {
         pagerState.animateScrollToPage(selectedTab)
     }
@@ -85,10 +83,19 @@ fun HomeScreen(
                     .padding(innerPadding)
             ) { page ->
                 when (page) {
-                    0 -> SongsContent(songs = sampleSongs)
-                    1 -> PlaylistContent(navController = navController)
+                    0 -> SongsScreen(
+                        songs = sampleSongs,
+                        onSongClick = { song ->
+                            // Handle song click
+                        },
+                        onSortSelected = { option, direction ->
+                            // Handle sort
+                        },
+                    )
+                    1 -> PlaylistScreen(navController = navController)
                 }
             }
         }
     }
 }
+
