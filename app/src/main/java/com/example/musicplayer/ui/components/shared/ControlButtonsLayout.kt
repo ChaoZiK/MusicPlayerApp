@@ -4,13 +4,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import com.example.musicplayer.ui.components.buttons.ActionButton
 import com.example.musicplayer.ui.components.buttons.ControlButton
 import com.example.musicplayer.ui.theme.AppIcons
 import com.example.musicplayer.ui.theme.Dimensions
 
 @Composable
-fun ControlButtons(
+fun ControlButtonsLayout(
     onShuffleClick: () -> Unit,
     onPlayClick: () -> Unit
 ) {

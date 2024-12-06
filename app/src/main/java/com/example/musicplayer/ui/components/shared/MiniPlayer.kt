@@ -14,15 +14,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.ui.draw.clip
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.musicplayer.ui.theme.AppIcons
 import com.example.musicplayer.ui.theme.AppShapes
+import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
 fun MiniPlayer(
     modifier: Modifier = Modifier,
-    onExpandClick: () -> Unit = {}
+    onExpandClick: () -> Unit = {},
+    viewModel: MiniPlayerViewModel = hiltViewModel()
 ) {
-    var isPlaying by remember { mutableStateOf(false) }
+    val currentSong by viewModel.currentSong.collectAsState()
+    val isPlaying by viewModel.isPlaying.collectAsState()
 
     Card(
         modifier = modifier
@@ -38,7 +42,7 @@ fun MiniPlayer(
     ) {
         MiniPlayerContent(
             isPlaying = isPlaying,
-            onPlayPauseClick = { isPlaying = !isPlaying }
+            onPlayPauseClick = { viewModel.togglePlayPause() }
         )
     }
 }

@@ -24,7 +24,7 @@ enum class HeaderActionType {
 }
 
 @Composable
-fun ListHeader(
+fun BaseHeader(
     count: Int,
     title: String,
     actionType: HeaderActionType,

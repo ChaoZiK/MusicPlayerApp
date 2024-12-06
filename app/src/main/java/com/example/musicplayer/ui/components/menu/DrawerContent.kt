@@ -59,62 +59,46 @@ fun DrawerContent(
                     .align(Alignment.CenterHorizontally)
                     .padding(bottom = 25.dp),
                 thickness = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface.copy(0.5f)
             )
+
+            Spacer(modifier = Modifier.weight(0.5f))
+
 
             DrawerItem(
                 item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.favourite)),
-                    label = "Favorites"
+                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.info)),
+                    label = "Information"
                 ) {
-                    selectedItem = "favorite"
-                    onItemClick("favorite")
+                    selectedItem = "information"
+                    onItemClick("information")
                 },
                 selectedItem = selectedItem
             )
 
             DrawerItem(
                 item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.history)),
-                    label = "Recently Played"
+                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.feedback)),
+                    label = "Feedback"
                 ) {
-                    selectedItem = "recent"
-                    onItemClick("recent")
+                    selectedItem = "feedback"
+                    onItemClick("feedback")
                 },
                 selectedItem = selectedItem,
             )
 
             DrawerItem(
                 item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.playlists)),
-                    label = "Playlists"
+                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.exit)),
+                    label = "Exit"
                 ) {
-                    selectedItem = "playlists"
-                    onItemClick("playlists")
+                    selectedItem = "exit"
+                    onItemClick("exit")
                 },
                 selectedItem = selectedItem
             )
 
             Spacer(modifier = Modifier.weight(1f))
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .align(Alignment.CenterHorizontally),
-                thickness = 1.dp,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
-            DrawerItem(
-                item = DrawerItemData(
-                    icon = DrawerIcon.PainterIcon(painterResource(AppIcons.settings)),
-                    label = "Settings"
-                ) {
-                    selectedItem = "settings"
-                    onItemClick("settings")
-                },
-                selectedItem = selectedItem
-            )
         }
     }
 }

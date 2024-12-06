@@ -11,12 +11,14 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.musicplayer.data.Song
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.musicplayer.ui.components.home.*
 import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.components.home.TabNav
+import com.example.musicplayer.ui.viewmodel.HomeViewModel
 import com.example.musicplayer.ui.viewmodel.AudioViewModel
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.PermissionToken
@@ -25,17 +27,24 @@ import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
 import kotlinx.coroutines.launch
-
-
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
 fun HomeScreen(
     onSearchClick: () -> Unit,
-    navController: NavController
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel(),
+    miniPlayerViewModel: MiniPlayerViewModel,
+    onMenuClick: () -> Unit
 ) {
+    val selectedTab by viewModel.selectedTab.collectAsState()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedTab by remember { mutableIntStateOf(0) }
     val audioViewModel: AudioViewModel = viewModel()
     val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
@@ -51,43 +60,61 @@ fun HomeScreen(
         }
     }
 
-    BackHandler(enabled = drawerState.isOpen) {
-        scope.launch { drawerState.close() }
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { 2 }
+    )
+
+    LaunchedEffect(selectedTab) {
+        pagerState.animateScrollToPage(selectedTab)
     }
 
-    ModalNavigationDrawer(
-        drawerState = drawerState,
-        gesturesEnabled = true,
-        scrimColor = MaterialTheme.colorScheme.scrim.copy(alpha = 0.5f),
-        drawerContent = {
-            DrawerContent(
-                onItemClick = {
-                    scope.launch { drawerState.close() }
-                }
-            )
-        }
-    ) {
-        Scaffold(
-            contentWindowInsets = WindowInsets(0),
-            topBar = {
-                Column(
-                    modifier = Modifier.padding(bottom = 10.dp)
-                ) {
-                    HomeTopBar(
-                        onMenuClick = { scope.launch { drawerState.open() } },
-                        onSearchClick = onSearchClick
-                    )
-                    TabNav(selectedTab = selectedTab, onTabSelected = { selectedTab = it })
-                }
+    LaunchedEffect(pagerState.currentPage) {
+        viewModel.setSelectedTab(pagerState.currentPage)
+    }
+
+    Scaffold(
+        contentWindowInsets = WindowInsets(0),
+        topBar = {
+            Column(
+                modifier = Modifier.padding(bottom = 10.dp)
+            ) {
+                HomeTopBar(
+                    onMenuClick = onMenuClick,
+                    onSearchClick = onSearchClick
+                )
+                TabNav(
+                    selectedTab = selectedTab,
+                    onTabSelected = {
+                        viewModel.setSelectedTab(it)
+                    }
+                )
             }
-        ) { padding ->
-            when (selectedTab) {
-                0 -> SongsContent(padding = padding, songs = songs)
-                1 -> PlaylistContent(padding = padding, navController = navController)
+        }
+    ) { innerPadding ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) { page ->
+            when (page) {
+                0 -> SongsScreen(
+                    songs = songs,
+                    onSongClick = { song ->
+                        miniPlayerViewModel.updateSong(song)
+                    },
+                    onSortSelected = { option, direction ->
+                        // Handle sort
+                    }
+                )
+                1 -> PlaylistScreen(navController = navController)
             }
         }
     }
 }
+
+
 
 private fun requestAudioPermission(context: Context, onResult: (Boolean) -> Unit) {
     val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {

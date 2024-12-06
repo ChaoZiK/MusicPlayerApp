@@ -13,17 +13,18 @@ object AppIcons {
     val moreDots = R.drawable.ic_more
     val arrowBack = R.drawable.ic_arrow_left
     val crossCircle = R.drawable.ic_cross_circle
-    val addPlaylist = R.drawable.ic_add
     val favourite = R.drawable.ic_heart
+    val favouriteFilled = R.drawable.ic_heart_filled
     val addToPlaylist = R.drawable.ic_add_to_playlist
     val playlist = R.drawable.ic_playlist
     val history = R.drawable.ic_history
-    val playlists = R.drawable.ic_playlists
-    val settings = R.drawable.ic_settings
     val addToQueue = R.drawable.ic_add_to_queue
     val bell = R.drawable.ic_bell
     val image = R.drawable.ic_image
     val nextSong = R.drawable.ic_next_song
     val trash = R.drawable.ic_trash
     val edit = R.drawable.ic_edit
+    val info = R.drawable.ic_info
+    val feedback = R.drawable.ic_feedback
+    val exit = R.drawable.ic_exit
 }
