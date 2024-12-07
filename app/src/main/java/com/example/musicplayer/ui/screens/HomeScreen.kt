@@ -28,6 +28,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import com.example.musicplayer.data.sampleSongs
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
@@ -94,7 +95,8 @@ fun HomeScreen(
         ) { page ->
             when (page) {
                 0 -> SongsScreen(
-                    songs = songs,
+                    // Replace 'sampleSongs' to 'songs' to use music from your device
+                    songs = sampleSongs,
                     onSongClick = { song ->
                         miniPlayerViewModel.updateSong(song)
                     },

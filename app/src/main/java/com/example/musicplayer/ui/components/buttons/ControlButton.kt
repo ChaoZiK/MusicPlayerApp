@@ -14,7 +14,8 @@ fun ControlButton(
     onClick: () -> Unit,
     icon: Painter,
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconModifier: Modifier = Modifier.size(24.dp)
 ) {
     Button(
         onClick = onClick,
@@ -29,7 +30,7 @@ fun ControlButton(
         Icon(
             painter = icon,
             contentDescription = text,
-            modifier = Modifier.size(20.dp)
+            modifier = iconModifier
         )
         Spacer(modifier = Modifier.width(Dimensions.paddingSmall))
         Text(

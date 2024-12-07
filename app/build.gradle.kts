@@ -28,18 +28,12 @@ android {
             )
         }
     }
-    // Use Java Toolchain and Java 17
     compileOptions {
-        java {
-            toolchain {
-                languageVersion = JavaLanguageVersion.of(17)
-            }
-        }
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
-
-    // Set Kotlin JVM target to Java 17
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 
     buildFeatures{
@@ -117,6 +111,12 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.coil.kt.coil.compose)
+
+    //Constraint Layout
+    implementation (libs.androidx.constraintlayout.compose)
+
+    //Navigation Animation
+    implementation (libs.accompanist.navigation.animation)
 
     // Dexter
     implementation (libs.dexter)

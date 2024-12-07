@@ -1,8 +1,7 @@
 package com.example.musicplayer
 
+
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,10 +28,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.musicplayer.data.customPlaylists
 import com.example.musicplayer.data.defaultPlaylists
+import com.example.musicplayer.ui.animations.Transitions
 import com.example.musicplayer.ui.components.dialogs.ExitDialog
 import com.example.musicplayer.ui.components.menu.DrawerContent
-import com.example.musicplayer.ui.components.shared.MiniPlayer
+import com.example.musicplayer.ui.components.player.MiniPlayer
 import com.example.musicplayer.ui.screens.FeedbackScreen
+import com.example.musicplayer.ui.screens.FullPlayerScreen
 import com.example.musicplayer.ui.screens.HomeScreen
 import com.example.musicplayer.ui.screens.InformationScreen
 import com.example.musicplayer.ui.screens.PlaylistDetailScreen
@@ -40,20 +43,118 @@ import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
 
+private object Destinations {
+    const val HOME = "home"
+    const val SEARCH = "search"
+    const val PLAYLIST = "playlist/{playlistId}"
+    const val FULL_PLAYER = "full_player"
+    const val INFORMATION = "information"
+    const val FEEDBACK = "feedback"
+}
+
+@Composable
+private fun MusicNavGraph(
+    navController: NavHostController,
+    viewModel: SearchViewModel,
+    miniPlayerViewModel: MiniPlayerViewModel,
+    onOpenDrawer: () -> Unit
+) {
+    NavHost(
+        navController = navController,
+        startDestination = Destinations.HOME,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        composable(
+            route = Destinations.HOME,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            HomeScreen(
+                onSearchClick = {
+                    viewModel.activateSearch()
+                    navController.navigate(Destinations.SEARCH)
+                },
+                navController = navController,
+                miniPlayerViewModel = miniPlayerViewModel,
+                onMenuClick = onOpenDrawer
+            )
+        }
+
+        composable(
+            route = Destinations.SEARCH,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            SearchScreen(
+                viewModel = viewModel,
+                onBackPressed = { navController.navigateUp() }
+            )
+        }
+
+        composable(
+            route = Destinations.PLAYLIST,
+            arguments = listOf(navArgument("playlistId") { type = NavType.StringType }),
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) { backStackEntry ->
+            val playlistId = backStackEntry.arguments?.getString("playlistId")
+            val playlist = (defaultPlaylists + customPlaylists).find { it.id == playlistId }
+
+            playlist?.let {
+                PlaylistDetailScreen(
+                    playlist = it,
+                    onBackPressed = { navController.navigateUp() },
+                    onSearchClick = {
+                        viewModel.activateSearch()
+                        navController.navigate(Destinations.SEARCH)
+                    },
+                    onSongClick = { song -> miniPlayerViewModel.updateSong(song) },
+                    onSortSelected = { option, direction -> /* Handle sort */ }
+                )
+            }
+        }
+
+        composable(
+            route = Destinations.FULL_PLAYER,
+            enterTransition = Transitions.Navigation.fullPlayerEnter,
+            exitTransition = Transitions.Navigation.fullPlayerExit
+        ) {
+            FullPlayerScreen(onBackClick = { navController.navigateUp() })
+        }
+
+        composable(
+            route = Destinations.INFORMATION,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            InformationScreen(onBackClick = { navController.navigateUp() })
+        }
+
+        composable(
+            route = Destinations.FEEDBACK,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            FeedbackScreen(onBackClick = { navController.navigateUp() })
+        }
+    }
+}
+
 @Composable
 fun MusicPlayerApp() {
     val navController = rememberNavController()
     val currentEntry by navController.currentBackStackEntryAsState()
-
-    val showMiniPlayer = currentEntry?.destination?.route?.let { route ->
-        route == "home" || route.startsWith("playlist/")
-    } ?: false
-
     val viewModel: SearchViewModel = hiltViewModel()
     val miniPlayerViewModel: MiniPlayerViewModel = hiltViewModel()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showExitDialog by remember { mutableStateOf(false) }
+
+    val showMiniPlayer = currentEntry?.destination?.route?.let { route ->
+        (route == Destinations.HOME || route.startsWith("playlist/")) &&
+                miniPlayerViewModel.currentSong.collectAsState().value != null
+    } ?: false
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -61,10 +162,11 @@ fun MusicPlayerApp() {
         drawerContent = {
             DrawerContent(
                 onItemClick = { route ->
-                    scope.launch { drawerState.close()
+                    scope.launch {
+                        drawerState.close()
                         when (route) {
-                            "information" -> navController.navigate("information")
-                            "feedback" -> navController.navigate("feedback")
+                            "information" -> navController.navigate(Destinations.INFORMATION)
+                            "feedback" -> navController.navigate(Destinations.FEEDBACK)
                             "exit" -> showExitDialog = true
                         }
                     }
@@ -73,81 +175,24 @@ fun MusicPlayerApp() {
         }
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            NavHost(
+            MusicNavGraph(
                 navController = navController,
-                startDestination = "home",
-                modifier = Modifier.fillMaxSize()
+                viewModel = viewModel,
+                miniPlayerViewModel = miniPlayerViewModel,
+                onOpenDrawer = { scope.launch { drawerState.open() } }
+            )
+
+            AnimatedVisibility(
+                visible = showMiniPlayer,
+                enter = Transitions.fadeIn,
+                exit = Transitions.fadeOut,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = Dimensions.paddingXLarge)
             ) {
-                composable("home") {
-                    AnimatedScreen(visible = currentEntry?.destination?.route == "home") {
-                        HomeScreen(
-                            onSearchClick = {
-                                viewModel.activateSearch()
-                                navController.navigate("search")
-                            },
-                            navController = navController,
-                            miniPlayerViewModel = miniPlayerViewModel,
-                            onMenuClick = { scope.launch { drawerState.open() } }
-                        )
-                    }
-                }
-                composable("search") {
-                    AnimatedScreen(visible = currentEntry?.destination?.route == "search") {
-                        SearchScreen(
-                            viewModel = viewModel,
-                            onBackPressed = { navController.navigateUp() }
-                        )
-                    }
-                }
-                composable(
-                    route = "playlist/{playlistId}",
-                    arguments = listOf(navArgument("playlistId") { type = NavType.StringType })
-                ) { backStackEntry ->
-                    val playlistId = backStackEntry.arguments?.getString("playlistId")
-                    val playlist = (defaultPlaylists + customPlaylists).find { it.id == playlistId }
-
-                    playlist?.let {
-                        AnimatedScreen(visible = currentEntry?.destination?.route?.startsWith("playlist") == true) {
-                            PlaylistDetailScreen(
-                                playlist = it,
-                                onBackPressed = { navController.navigateUp() },
-                                onSearchClick = {
-                                    viewModel.activateSearch()
-                                    navController.navigate("search")
-                                },
-                                onSongClick = { song ->
-                                    miniPlayerViewModel.updateSong(song)
-                                },
-                                onSortSelected = { option, direction ->
-                                    // Handle sort
-                                }
-                            )
-                        }
-                    }
-                }
-                composable("information") {
-                    AnimatedScreen(visible = currentEntry?.destination?.route == "information") {
-                        InformationScreen(
-                            onBackClick = { navController.navigateUp() }
-                        )
-                    }
-                }
-
-                composable("feedback") {
-                    AnimatedScreen(visible = currentEntry?.destination?.route == "feedback") {
-                        FeedbackScreen(
-                            onBackClick = { navController.navigateUp() }
-                        )
-                    }
-                }
-            }
-
-            if (showMiniPlayer) {
                 MiniPlayer(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = Dimensions.paddingXLarge),
-                    viewModel = miniPlayerViewModel
+                    viewModel = miniPlayerViewModel,
+                    onExpandClick = { navController.navigate(Destinations.FULL_PLAYER) }
                 )
             }
 
@@ -160,19 +205,5 @@ fun MusicPlayerApp() {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun AnimatedScreen(
-    visible: Boolean,
-    content: @Composable () -> Unit
-) {
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        content()
     }
 }

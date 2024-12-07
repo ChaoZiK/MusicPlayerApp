@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.musicplayer.ui.components.buttons.MoreButton
 import com.example.musicplayer.ui.components.cards.MusicIconCard
 import com.example.musicplayer.ui.theme.AppIcons
 import com.example.musicplayer.ui.theme.Dimensions
@@ -61,13 +62,6 @@ fun BaseItem(
                 .padding(start = Dimensions.paddingMedium)
         )
 
-        IconButton(onClick = onMoreClick) {
-            Icon(
-                painter = painterResource(AppIcons.moreDots),
-                contentDescription = "More options",
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(18.dp)
-            )
-        }
+        MoreButton(onMoreClick = onMoreClick)
     }
 }
