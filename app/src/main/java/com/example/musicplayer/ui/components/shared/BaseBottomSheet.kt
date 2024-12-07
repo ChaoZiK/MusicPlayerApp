@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.musicplayer.ui.components.buttons.CloseButton
 import com.example.musicplayer.ui.theme.AppShapes
@@ -27,8 +28,20 @@ fun BaseBottomSheet(
     ) {
         Box(modifier = Modifier.padding(horizontal = 20.dp)) {
             ListItem(
-                headlineContent = { Text(title) },
-                supportingContent = { Text(subtitle) },
+                headlineContent = {
+                    Text(
+                        title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                supportingContent = {
+                    Text(
+                        subtitle,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 leadingContent = {
                     Card(
                         modifier = Modifier.size(48.dp),
