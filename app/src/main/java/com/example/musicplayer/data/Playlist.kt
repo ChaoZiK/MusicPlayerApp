@@ -25,13 +25,13 @@ val defaultPlaylists = listOf(
     Playlist(
         id = "favorite",
         title = "My favourite",
-        songs = sampleSongs,
+        songs = listOf(),
         isDefault = true
     ),
     Playlist(
         id = "recent",
         title = "Recently played",
-        songs = sampleSongs,
+        songs = listOf(),
         isDefault = true
     ),
 )

@@ -28,9 +28,7 @@ fun SongDetailsSheet(
         DetailItem("Title", song.title)
         DetailItem("Album", song.album)
         DetailItem("Artist", song.artist)
-        DetailItem("Genre", song.genre ?: "<unknown>")
         DetailItem("Duration", song.duration)
-        DetailItem("Size", song.size)
         DetailItem("Location", song.path)
 
         Row(
