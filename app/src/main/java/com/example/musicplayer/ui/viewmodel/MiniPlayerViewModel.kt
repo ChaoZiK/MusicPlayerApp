@@ -20,6 +20,9 @@ class MiniPlayerViewModel @Inject constructor(
 
     fun updateSong(song: Song) {
         playerRepository.updateSong(song)
+        if (!playerRepository.isPlaying.value) {
+            playerRepository.togglePlayPause()
+        }
     }
 
     fun togglePlayPause() {

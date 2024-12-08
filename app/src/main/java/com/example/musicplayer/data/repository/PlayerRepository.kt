@@ -59,6 +59,7 @@ class PlayerRepository @Inject constructor(
         _artist.value = song.artist
         _artUri.value = song.artUri
         resetProgress()
+        _isPlaying.value = false
     }
 
 
