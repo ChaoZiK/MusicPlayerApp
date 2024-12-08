@@ -1,7 +1,5 @@
 package com.example.musicplayer.data
 
-import android.net.Uri
-
 import android.media.MediaMetadataRetriever
 
 data class Song(
@@ -25,7 +23,7 @@ val sampleSongs = listOf(
         id = "1",
         title = "Shape of You",
         artist = "Ed Sheeran",
-        album = "÷ (Divide)",
+        album = "21",
         genre = "Pop",
         duration = "3:53",
         size = "8.5 MB",

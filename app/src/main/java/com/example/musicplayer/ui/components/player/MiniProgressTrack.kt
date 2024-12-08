@@ -28,7 +28,7 @@ fun MiniProgressTrack(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(3.dp)
+            .height(2.dp)
             .background(
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f)
             )

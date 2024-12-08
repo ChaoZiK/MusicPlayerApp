@@ -26,6 +26,11 @@ class FullPlayerViewModel @Inject constructor(
     val artUri = playerRepository.artUri
     val songTitle = playerRepository.songTitle
     val artist = playerRepository.artist
+    val volume = playerRepository.volume
+
+    fun updateVolume(newVolume: Float) {
+        playerRepository.updateVolume(newVolume)
+    }
 
     private val _isFavorite = MutableStateFlow(false)
     val isFavorite = _isFavorite.asStateFlow()

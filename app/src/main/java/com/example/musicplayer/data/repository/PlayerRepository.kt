@@ -45,6 +45,13 @@ class PlayerRepository @Inject constructor(
 
     private var progressUpdateJob: Job? = null
 
+    private val _volume = MutableStateFlow(0.5f)
+    val volume = _volume.asStateFlow()
+
+    fun updateVolume(newVolume: Float) {
+        _volume.value = newVolume.coerceIn(0f, 1f)
+    }
+
     fun updateSong(song: Song) {
         _currentSong.value = song
         _totalTime.value = song.duration

@@ -34,5 +34,6 @@ object AppIcons {
     val speed = R.drawable.ic_speed
     val repeat = R.drawable.ic_repeat
     val repeatOnce = R.drawable.ic_repeat_once
-
+    val volume = R.drawable.ic_volume
+    val curentlyPlaying = R.drawable.ic_playing_playlist
 }

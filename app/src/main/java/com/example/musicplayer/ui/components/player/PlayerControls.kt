@@ -35,9 +35,9 @@ fun PlayerControls(
                 color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(24.dp)
             )
-            .padding(horizontal = 28.dp, vertical = 28.dp)
+            .padding(horizontal = 28.dp, vertical = 36.dp)
     ) {
-        Column(modifier = Modifier.padding(top = 24.dp)) {
+        Column{
             ProgressSlider(
                 progress = progress,
                 onProgressChange = onProgressChange,
