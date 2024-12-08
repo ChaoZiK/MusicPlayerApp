@@ -76,9 +76,4 @@ class FullPlayerViewModel @Inject constructor(
     fun playNext() {
         // Implement next logic
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        playerRepository.stopPlayback()
-    }
 }
