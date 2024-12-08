@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.musicplayer.data.Playlist
 import com.example.musicplayer.ui.components.shared.BaseBottomSheet
+import com.example.musicplayer.ui.components.shared.OptionItem
 import com.example.musicplayer.ui.theme.AppIcons
 
 @Composable
@@ -26,40 +27,16 @@ fun CustomPlaylistOptionsSheet(
         subtitle = "${playlist.songCount} songs",
         onDismiss = onDismiss
     ) {
-        ListItem(
-            headlineContent = {
-                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    Text("Rename")
-                }
-            },
-            leadingContent = {
-                Box(modifier = Modifier.padding(start = 20.dp)) {
-                    Icon(
-                        painter = painterResource(AppIcons.edit),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            },
-            modifier = Modifier.clickable { onDismiss() }
+        OptionItem(
+            text = "Rename",
+            icon = AppIcons.edit,
+            onClick = onDismiss
         )
 
-        ListItem(
-            headlineContent = {
-                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    Text("Change cover")
-                }
-            },
-            leadingContent = {
-                Box(modifier = Modifier.padding(start = 20.dp)) {
-                    Icon(
-                        painter = painterResource(AppIcons.image),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            },
-            modifier = Modifier.clickable { onDismiss() }
+        OptionItem(
+            text = "Change cover",
+            icon = AppIcons.image,
+            onClick = onDismiss
         )
 
         HorizontalDivider(
@@ -68,22 +45,10 @@ fun CustomPlaylistOptionsSheet(
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
         )
 
-        ListItem(
-            headlineContent = {
-                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    Text("Delete")
-                }
-            },
-            leadingContent = {
-                Box(modifier = Modifier.padding(start = 20.dp)) {
-                    Icon(
-                        painter = painterResource(AppIcons.trash),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            },
-            modifier = Modifier.clickable { onDismiss() }
+        OptionItem(
+            text = "Delete",
+            icon = AppIcons.trash,
+            onClick = onDismiss
         )
     }
 }

@@ -12,6 +12,7 @@ object AppIcons {
     val sort = R.drawable.ic_sort
     val moreDots = R.drawable.ic_more
     val arrowBack = R.drawable.ic_arrow_left
+    val arrowDown = R.drawable.ic_arrow_down
     val crossCircle = R.drawable.ic_cross_circle
     val favourite = R.drawable.ic_heart
     val favouriteFilled = R.drawable.ic_heart_filled
@@ -27,4 +28,12 @@ object AppIcons {
     val info = R.drawable.ic_info
     val feedback = R.drawable.ic_feedback
     val exit = R.drawable.ic_exit
+    val next = R.drawable.ic_next
+    val previous = R.drawable.ic_previous
+    val share = R.drawable.ic_share
+    val speed = R.drawable.ic_speed
+    val repeat = R.drawable.ic_repeat
+    val repeatOnce = R.drawable.ic_repeat_once
+    val volume = R.drawable.ic_volume
+    val currentlyPlaying = R.drawable.ic_playing_playlist
 }

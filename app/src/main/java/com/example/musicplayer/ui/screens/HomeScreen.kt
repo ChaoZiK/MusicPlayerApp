@@ -3,7 +3,6 @@ package com.example.musicplayer.ui.screens
 import android.Manifest
 import android.content.Context
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,10 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.musicplayer.data.Song
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.musicplayer.ui.components.home.*
-import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.components.home.TabNav
 import com.example.musicplayer.ui.viewmodel.HomeViewModel
 import com.example.musicplayer.ui.viewmodel.AudioViewModel
@@ -26,12 +23,12 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import kotlinx.coroutines.launch
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import com.example.musicplayer.data.sampleSongs
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
@@ -43,8 +40,6 @@ fun HomeScreen(
     onMenuClick: () -> Unit
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
     val audioViewModel: AudioViewModel = viewModel()
     val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
@@ -100,7 +95,8 @@ fun HomeScreen(
         ) { page ->
             when (page) {
                 0 -> SongsScreen(
-                    songs = songs,
+                    // Replace 'sampleSongs' to 'songs' to use music from your device
+                    songs = sampleSongs,
                     onSongClick = { song ->
                         miniPlayerViewModel.updateSong(song)
                     },
