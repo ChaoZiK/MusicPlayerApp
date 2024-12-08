@@ -51,7 +51,7 @@ fun ProgressSlider(
                 .height(2.dp)
                 .background(
                     color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(1.dp)
+                    shape = RoundedCornerShape(2.dp)
                 )
         )
 
@@ -62,7 +62,7 @@ fun ProgressSlider(
                 .height(2.dp)
                 .background(
                     color = MaterialTheme.colorScheme.onPrimary,
-                    shape = RoundedCornerShape(1.dp)
+                    shape = RoundedCornerShape(2.dp)
                 )
         )
 

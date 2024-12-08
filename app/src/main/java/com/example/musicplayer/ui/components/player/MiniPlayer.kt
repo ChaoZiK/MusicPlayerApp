@@ -64,22 +64,22 @@ fun MiniPlayer(
         shape = AppShapes.large
     ) {
         Column {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = cornerRadius)
-            ) {
-                MiniProgressTrack(progress = progress)
-            }
-
             MiniPlayerContent(
                 isPlaying = isPlaying,
                 onPlayPauseClick = { viewModel.togglePlayPause() },
                 viewModel = viewModel,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .weight(1f)
                     .padding(horizontal = 16.dp)
             )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = cornerRadius + 5.dp)
+            ) {
+                MiniProgressTrack(progress = progress)
+            }
         }
     }
 }
