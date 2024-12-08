@@ -29,6 +29,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.musicplayer.ui.components.buttons.AddToPlaylistButton
+import com.example.musicplayer.ui.components.buttons.CurrentPlayingButton
 import com.example.musicplayer.ui.components.buttons.DownButton
 import com.example.musicplayer.ui.components.buttons.FavoriteButton
 import com.example.musicplayer.ui.components.buttons.MoreButton
@@ -238,6 +239,7 @@ private fun ActionButtons(
         )
         AddToPlaylistButton()
         ShareButton()
+        CurrentPlayingButton()
     }
 }
 
