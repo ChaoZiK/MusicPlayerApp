@@ -39,10 +39,10 @@ fun FullPlayerOptionsSheet(
     ) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
             OptionItem(
-                text = "Change cover", icon = AppIcons.image, onClick = onDismiss
+                text = "Change cover", icon = AppIcons.image, onClick = { }
             )
             OptionItem(
-                text = "Set as ringtone", icon = AppIcons.bell, onClick = onDismiss
+                text = "Set as ringtone", icon = AppIcons.bell, onClick = { }
             )
         }
 
@@ -54,7 +54,7 @@ fun FullPlayerOptionsSheet(
 
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
             OptionItem(
-                text = "Delete from device", icon = AppIcons.trash, onClick = onDismiss
+                text = "Delete from device", icon = AppIcons.trash, onClick = { }
             )
         }
 

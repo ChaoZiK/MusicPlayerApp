@@ -39,17 +39,17 @@ fun SongOptionsSheet(
             OptionItem(
                 text = "Play next",
                 icon = AppIcons.nextSong,
-                onClick = onDismiss
+                onClick = { }
             )
             OptionItem(
                 text = "Add to queue",
                 icon = AppIcons.addToQueue,
-                onClick = onDismiss
+                onClick = { }
             )
             OptionItem(
                 text = "Add to playlist",
                 icon = AppIcons.addToPlaylist,
-                onClick = onDismiss
+                onClick = { }
             )
         }
 
@@ -63,12 +63,12 @@ fun SongOptionsSheet(
             OptionItem(
                 text = "Change cover",
                 icon = AppIcons.image,
-                onClick = onDismiss
+                onClick = { }
             )
             OptionItem(
                 text = "Set as ringtone",
                 icon = AppIcons.bell,
-                onClick = onDismiss
+                onClick = { }
             )
         }
 
@@ -82,7 +82,7 @@ fun SongOptionsSheet(
             OptionItem(
                 text = "Delete from device",
                 icon = AppIcons.trash,
-                onClick = onDismiss
+                onClick = { }
             )
         }
     }
