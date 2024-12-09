@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.musicplayer.data.Song
 import com.example.musicplayer.ui.components.search.SearchBar
 import com.example.musicplayer.ui.theme.Dimensions
 import com.example.musicplayer.ui.viewmodel.SearchViewModel
@@ -22,25 +23,7 @@ fun SearchScreen(
     onBackPressed: () -> Unit
 ) {
     val searchText by viewModel.searchText.collectAsState()
-
-    // Sample list of songs
-    val songList = listOf(
-        "Like A Rolling Stone",
-        "(I Can't Get No) Satisfaction",
-        "Imagine",
-        "What's Going On",
-        "Respect",
-        "Good Vibrations",
-        "Johnny B. Goode",
-        "Hey Jude",
-        "Smells Like Teen Spirit",
-        "What'd I Say"
-    )
-
-    // Filter the song list based on the search text
-    val filteredSongs = songList.filter {
-        it.contains(searchText, ignoreCase = true)
-    }
+    val filteredSongs by viewModel.filteredSongs.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -61,9 +44,11 @@ fun SearchScreen(
                 vertical = Dimensions.paddingSmall
             )
         ) {
-            // Search results implementation
-            items(filteredSongs) { song ->
-                Text(text = song, modifier = Modifier.padding(8.dp))
+            items(filteredSongs) { song: Song ->
+                Text(
+                    text = song.title,
+                    modifier = Modifier.padding(8.dp)
+                )
             }
         }
     }
