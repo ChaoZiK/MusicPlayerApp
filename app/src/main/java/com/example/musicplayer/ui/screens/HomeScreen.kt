@@ -28,6 +28,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import com.example.musicplayer.data.AlphabeticDirection
+import com.example.musicplayer.data.DurationDirection
+import com.example.musicplayer.data.SortOption
+import com.example.musicplayer.data.TimeDirection
 import com.example.musicplayer.data.sampleSongs
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
@@ -43,6 +47,14 @@ fun HomeScreen(
     val audioViewModel: AudioViewModel = viewModel()
     val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
+
+    // Local state for the displayed (and sorted) songs
+    var displayedSongs by remember { mutableStateOf(songs) }
+
+    // Update displayedSongs when the original songs list changes
+    LaunchedEffect(songs) {
+        displayedSongs = songs
+    }
 
     // Request permissions and fetch songs
     LaunchedEffect(Unit) {
@@ -101,7 +113,27 @@ fun HomeScreen(
                         miniPlayerViewModel.updateSong(song)
                     },
                     onSortSelected = { option, direction ->
-                        // Handle sort
+                        // Handle sort on sampleSongs based on option and direction
+                        // only sort on sampleSongs, song fetch from local is another case
+                        val sortedSongs = when (option) {
+                            SortOption.SONG_NAME -> sampleSongs.sortedBy { it.title }
+                            SortOption.ARTIST_NAME -> sampleSongs.sortedBy { it.artist }
+                            SortOption.TIME_ADDED -> sampleSongs.sortedBy { it.year } // Assuming year is used for time added
+                            SortOption.DURATION -> sampleSongs.sortedBy { it.title }
+                        }
+
+                        // Adjust sorting based on direction
+                        val finalSortedSongs = when (direction) {
+                            is AlphabeticDirection.AToZ -> sortedSongs
+                            is AlphabeticDirection.ZToA -> sortedSongs.reversed()
+                            is TimeDirection.NewToOld -> sortedSongs.reversed()
+                            is TimeDirection.OldToNew -> sortedSongs
+                            is DurationDirection.ShortToLong -> sortedSongs
+                            is DurationDirection.LongToShort -> sortedSongs.reversed()
+                        }
+
+                        // Update the UI with the sorted songs
+                        displayedSongs = finalSortedSongs
                     }
                 )
                 1 -> PlaylistScreen(navController = navController)
