@@ -22,4 +22,8 @@ class AudioViewModel(application: Application) : AndroidViewModel(application) {
             _songs.postValue(fetchedSongs)
         }
     }
+
+    fun updateSongs(fetchedSongs: List<Song>) {
+        _songs.postValue(fetchedSongs)
+    }
 }

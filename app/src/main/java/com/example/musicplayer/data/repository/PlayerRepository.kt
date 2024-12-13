@@ -1,6 +1,7 @@
 package com.example.musicplayer.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.example.musicplayer.data.Song
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -100,27 +101,59 @@ class PlayerRepository @Inject constructor(
         return "%02d:%02d".format(minutes, seconds)
     }
 
-    private suspend fun startProgressUpdate() {
-        val updatesPerSecond = 60
-        val delayTime = 1000L / updatesPerSecond
+//    private suspend fun startProgressUpdate() {
+//        val updatesPerSecond = 60
+//        val delayTime = 1000L / updatesPerSecond
+//
+//        while (true) {
+//            delay(delayTime)
+//            if (_isPlaying.value) {
+//                val totalSeconds = (_totalTime.value.split(":")[0].toInt() * 60) +
+//                        _totalTime.value.split(":")[1].toInt()
+//                val deltaProgress = 1f / (totalSeconds * updatesPerSecond)
+//                val currentProgress = _progress.value
+//
+//                val nextProgress = currentProgress + deltaProgress
+//                if (nextProgress >= 1f) {
+//                    resetProgress()
+//                    _isPlaying.value = false
+//                } else {
+//                    updateProgress(nextProgress)
+//                }
+//            }
+//        }
+//    }
+private suspend fun startProgressUpdate() {
+    if (_totalTime.value.isEmpty() || !_totalTime.value.contains(":")) {
+        resetProgress()
+        return
+    }
 
-        while (true) {
+    val updatesPerSecond = 60
+    val delayTime = 1000L / updatesPerSecond
+
+    try {
+        val totalSeconds = _totalTime.value.split(":").let {
+            it[0].toInt() * 60 + it[1].toInt()
+        }
+        val deltaProgress = 1f / (totalSeconds * updatesPerSecond)
+
+        while (_isPlaying.value) {
             delay(delayTime)
-            if (_isPlaying.value) {
-                val totalSeconds = (_totalTime.value.split(":")[0].toInt() * 60) +
-                        _totalTime.value.split(":")[1].toInt()
-                val deltaProgress = 1f / (totalSeconds * updatesPerSecond)
-                val currentProgress = _progress.value
-
-                val nextProgress = currentProgress + deltaProgress
-                if (nextProgress >= 1f) {
-                    resetProgress()
-                    _isPlaying.value = false
-                } else {
-                    updateProgress(nextProgress)
-                }
+            val nextProgress = _progress.value + deltaProgress
+            if (nextProgress >= 1f) {
+                resetProgress()
+                _isPlaying.value = false
+                break
+            } else {
+                updateProgress(nextProgress)
             }
         }
+    } catch (e: Exception) {
+        Log.e("PlayerRepository", "Error during progress update: ${e.message}")
+        resetProgress()
     }
+}
+
 
 }

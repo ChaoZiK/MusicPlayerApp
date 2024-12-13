@@ -2,6 +2,7 @@ package com.example.musicplayer.ui.screens
 
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -28,6 +29,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import com.example.musicplayer.backend.AudioFetcher
 import com.example.musicplayer.data.sampleSongs
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
@@ -48,6 +50,8 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         requestAudioPermission(context) { granted ->
             if (granted) {
+                val fetchedSongs = AudioFetcher(context).fetchAudioFiles()
+                Log.d("HomeScreen", "Fetched songs: $fetchedSongs")
                 audioViewModel.fetchSongs()
             } else {
                 Toast.makeText(context, "Permission denied to access audio files", Toast.LENGTH_SHORT).show()
@@ -96,9 +100,14 @@ fun HomeScreen(
             when (page) {
                 0 -> SongsScreen(
                     // Replace 'sampleSongs' to 'songs' to use music from your device
-                    songs = sampleSongs,
+                    songs = songs,
                     onSongClick = { song ->
-                        miniPlayerViewModel.updateSong(song)
+                        if (song.id.isNotEmpty() && song.path.isNotEmpty()) {
+                            miniPlayerViewModel.updateSong(song)
+                        } else {
+                            Log.e("HomeScreen", "Invalid song data: $song")
+                        }
+
                     },
                     onSortSelected = { option, direction ->
                         // Handle sort
