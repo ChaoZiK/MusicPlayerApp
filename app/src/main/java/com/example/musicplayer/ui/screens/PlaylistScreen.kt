@@ -40,6 +40,7 @@ fun PlaylistScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
             ) {
+                // Show Recent playlist
                 items(defaultPlaylists.size) { index ->
                     val playlist = defaultPlaylists[index]
                     PlaylistItem(
@@ -52,6 +53,34 @@ fun PlaylistScreen(
                             showOptions = true
                         }
                     )
+                }
+
+                // Favorites Section
+                item {
+                    Text(
+                        text = "Favorites",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            top = 24.dp,
+                            bottom = 16.dp
+                        ),
+                    )
+                }
+
+                // Wrap FavoriteListScreen in a constrained Box
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp) // Constrain height to avoid infinite measurement
+                    ) {
+                        FavoriteListScreen(
+                            onSongClick = { song ->
+                                navController.navigate("full_player/${song.songId}")
+                            }
+                        )
+                    }
                 }
 
                 item {

@@ -1,5 +1,6 @@
 package com.example.musicplayer.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -99,6 +100,10 @@ fun FullPlayerScreen(
                     artist = artist
                 )
 
+                currentSong?.let { song ->
+                    Log.d("FullPlayerScreen", "Current Song: ${song.title}")
+                }
+
                 ActionButtons(
                     modifier = Modifier.constrainAs(actions) {
                         bottom.linkTo(controls.top, margin = 16.dp)
@@ -106,7 +111,10 @@ fun FullPlayerScreen(
                         width = Dimension.fillToConstraints
                     },
                     isFavorite = isFavorite,
-                    onFavoriteClick = { viewModel.toggleFavorite() }
+                    onFavoriteClick = {
+                        Log.d("FullPlayerScreen", "Favorite button clicked")
+                        viewModel.toggleFavorite()
+                    }
                 )
 
                 PlayerControls(
