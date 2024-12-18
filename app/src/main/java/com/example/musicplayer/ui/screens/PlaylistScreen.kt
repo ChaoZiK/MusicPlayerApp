@@ -79,6 +79,8 @@ fun PlaylistScreen(
                             navController.navigate("favorites")
                         },
                         onMoreClick = {
+                            selectedPlaylist = favoritePlaylist
+                            showOptions = true
                         }
                     )
                 }
