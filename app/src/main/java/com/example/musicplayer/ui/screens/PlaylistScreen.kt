@@ -5,26 +5,42 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.musicplayer.data.Playlist
 import com.example.musicplayer.data.customPlaylists
 import com.example.musicplayer.data.defaultPlaylists
+import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.playlist.AddPlaylistDialog
 import com.example.musicplayer.ui.components.playlist.PlaylistHeader
 import com.example.musicplayer.ui.components.playlist.PlaylistItem
 import com.example.musicplayer.ui.components.sheets.CustomPlaylistOptionsSheet
 import com.example.musicplayer.ui.components.sheets.DefaultPlaylistOptionsSheet
+import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistScreen(
-    navController: NavController
+    navController: NavController,
+    favoriteListViewModel: FavoriteListViewModel = hiltViewModel()
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var showOptions by remember { mutableStateOf(false) }
     var selectedPlaylist by remember { mutableStateOf<Playlist?>(null) }
+    val favoriteSongs by favoriteListViewModel.favoriteSongs.observeAsState(emptyList())
+
+    val favoriteSongsAsSongs = favoriteSongs.map { it.toSong() }
+
+    val favoritePlaylist = Playlist(
+        id = "favorite",
+        title = "My favorite songs",
+        songs = favoriteSongsAsSongs,
+        isDefault = true,
+        coverImage = null
+    )
 
     Box(
         modifier = Modifier
@@ -55,32 +71,16 @@ fun PlaylistScreen(
                     )
                 }
 
-                // Favorites Section
                 item {
-                    Text(
-                        text = "Favorites",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            top = 24.dp,
-                            bottom = 16.dp
-                        ),
+                    PlaylistItem(
+                        playlist = favoritePlaylist,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        onPlaylistClick = {
+                            navController.navigate("favorites")
+                        },
+                        onMoreClick = {
+                        }
                     )
-                }
-
-                // Wrap FavoriteListScreen in a constrained Box
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp) // Constrain height to avoid infinite measurement
-                    ) {
-                        FavoriteListScreen(
-                            onSongClick = { song ->
-                                navController.navigate("full_player/${song.songId}")
-                            }
-                        )
-                    }
                 }
 
                 item {

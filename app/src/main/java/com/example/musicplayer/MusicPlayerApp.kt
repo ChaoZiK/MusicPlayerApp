@@ -32,6 +32,7 @@ import com.example.musicplayer.ui.animations.Transitions
 import com.example.musicplayer.ui.components.dialogs.ExitDialog
 import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.components.player.MiniPlayer
+import com.example.musicplayer.ui.screens.FavoriteListScreen
 import com.example.musicplayer.ui.screens.FeedbackScreen
 import com.example.musicplayer.ui.screens.FullPlayerScreen
 import com.example.musicplayer.ui.screens.HomeScreen
@@ -50,6 +51,7 @@ private object Destinations {
     const val FULL_PLAYER = "full_player"
     const val INFORMATION = "information"
     const val FEEDBACK = "feedback"
+    const val FAVORITES = "favorites"
 }
 
 @Composable
@@ -136,6 +138,24 @@ private fun MusicNavGraph(
             exitTransition = Transitions.Navigation.defaultExit
         ) {
             FeedbackScreen(onBackClick = { navController.navigateUp() })
+        }
+
+
+        composable(
+            route = Destinations.FAVORITES,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            FavoriteListScreen(
+                onSongClick = { song ->
+                    navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
+                },
+                onBackClick = { navController.navigateUp() },
+                onSearchClick = {
+                    viewModel.activateSearch()
+                    navController.navigate(Destinations.SEARCH)
+                }
+            )
         }
     }
 }

@@ -135,7 +135,8 @@ fun Song.toFavoritesSong(addedTimestamp: Long): FavoriteSong {
     albumName = this.album,
     duration = this.duration,
     coverImageUrl = this.artUri,
-    addedTimestamp = addedTimestamp
+    addedTimestamp = addedTimestamp,
+    path = this.path
   )
 }
 fun FavoriteSong.toSong(path: String): Song {

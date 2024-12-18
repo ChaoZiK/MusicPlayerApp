@@ -13,7 +13,8 @@ data class FavoriteSong(
     val albumName: String,
     val duration: String,
     val coverImageUrl: String,
-    val addedTimestamp: Long
+    val addedTimestamp: Long,
+    val path: String
 )
 
 fun FavoriteSong.toSong(): Song {
@@ -41,7 +42,8 @@ fun Song.toFavoriteSong(timestamp: Long): FavoriteSong {
         albumName = "", // Update if album data exists
         duration = this.duration,
         coverImageUrl = this.artUri,
-        addedTimestamp = timestamp
+        addedTimestamp = timestamp,
+        path = this.path
     )
 }
 

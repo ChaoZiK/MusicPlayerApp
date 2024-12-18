@@ -30,7 +30,7 @@ abstract class FavoritesDatabase : RoomDatabase() {
     }
   }
 }*/
-@Database(entities = [FavoriteSong::class], version = 1, exportSchema = false)
+@Database(entities = [FavoriteSong::class], version = 2, exportSchema = false)
 abstract class FavoriteDatabase : RoomDatabase() {
   abstract fun favoritesDAO(): FavoriteDAO
 
