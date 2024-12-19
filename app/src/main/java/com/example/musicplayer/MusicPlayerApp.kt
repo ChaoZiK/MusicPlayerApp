@@ -38,6 +38,7 @@ import com.example.musicplayer.ui.screens.FullPlayerScreen
 import com.example.musicplayer.ui.screens.HomeScreen
 import com.example.musicplayer.ui.screens.InformationScreen
 import com.example.musicplayer.ui.screens.PlaylistDetailScreen
+import com.example.musicplayer.ui.screens.RecentlyPlayedListScreen
 import com.example.musicplayer.ui.screens.SearchScreen
 import com.example.musicplayer.ui.theme.Dimensions
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
@@ -52,6 +53,7 @@ private object Destinations {
     const val INFORMATION = "information"
     const val FEEDBACK = "feedback"
     const val FAVORITES = "favorites"
+    const val RECENTLY_PLAYED = "recently_played"
 }
 
 @Composable
@@ -157,6 +159,24 @@ private fun MusicNavGraph(
                 }
             )
         }
+
+        composable(
+            route = Destinations.RECENTLY_PLAYED,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            RecentlyPlayedListScreen(
+                onBackClick = { navController.navigateUp() },
+                onSearchClick = {
+                    viewModel.activateSearch()
+                    navController.navigate(Destinations.SEARCH)
+                },
+                onSongClick = { song ->
+                    navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
+                }
+            )
+        }
+
     }
 }
 

@@ -25,4 +25,16 @@ object DatabaseModule {
     fun provideFavoriteDAO(favoriteDatabase: FavoriteDatabase): FavoriteDAO {
         return favoriteDatabase.favoritesDAO()
     }
+
+    @Provides
+    @Singleton
+    fun provideRecentlyPlayedDatabase(@ApplicationContext context: Context): RecentlyPlayedDatabase {
+        return RecentlyPlayedDatabase.getDatabase(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRecentlyPlayedDAO(recentlyPlayedDatabase: RecentlyPlayedDatabase): RecentlyPlayedDAO {
+        return recentlyPlayedDatabase.recentlyPlayedDAO()
+    }
 }

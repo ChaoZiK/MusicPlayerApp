@@ -20,24 +20,35 @@ import com.example.musicplayer.ui.components.playlist.PlaylistItem
 import com.example.musicplayer.ui.components.sheets.CustomPlaylistOptionsSheet
 import com.example.musicplayer.ui.components.sheets.DefaultPlaylistOptionsSheet
 import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
+import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistScreen(
     navController: NavController,
-    favoriteListViewModel: FavoriteListViewModel = hiltViewModel()
+    favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
+    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel()
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var showOptions by remember { mutableStateOf(false) }
     var selectedPlaylist by remember { mutableStateOf<Playlist?>(null) }
     val favoriteSongs by favoriteListViewModel.favoriteSongs.observeAsState(emptyList())
+    val recentlyPlayedSongs by recentlyPlayedViewModel.recentlyPlayedSongs.observeAsState(emptyList())
 
     val favoriteSongsAsSongs = favoriteSongs.map { it.toSong() }
+    val recentlyPlayedSongsAsSongs = recentlyPlayedSongs.map { it.toSong() }
 
     val favoritePlaylist = Playlist(
         id = "favorite",
         title = "My favorite songs",
         songs = favoriteSongsAsSongs,
+        isDefault = true,
+        coverImage = null
+    )
+    val recentlyPlayedPlaylist = Playlist(
+        id = "recent",
+        title = "Recently played songs",
+        songs = recentlyPlayedSongsAsSongs,
         isDefault = true,
         coverImage = null
     )
@@ -56,16 +67,31 @@ fun PlaylistScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                // Show Recent playlist
-                items(defaultPlaylists.size) { index ->
-                    val playlist = defaultPlaylists[index]
+//                // Show Recent playlist
+//                items(defaultPlaylists.size) { index ->
+//                    val playlist = defaultPlaylists[index]
+//                    PlaylistItem(
+//                        playlist = playlist,
+//                        onPlaylistClick = {
+//                            navController.navigate("playlist/${playlist.id}")
+//                        },
+//                        onMoreClick = {
+//                            selectedPlaylist = playlist
+//                            showOptions = true
+//                        }
+//                    )
+//                }
+
+                // Add Recently Played item
+                item {
                     PlaylistItem(
-                        playlist = playlist,
+                        playlist = recentlyPlayedPlaylist,
+                        modifier = Modifier.padding(bottom = 8.dp),
                         onPlaylistClick = {
-                            navController.navigate("playlist/${playlist.id}")
+                            navController.navigate("recently_played")
                         },
                         onMoreClick = {
-                            selectedPlaylist = playlist
+                            selectedPlaylist = recentlyPlayedPlaylist
                             showOptions = true
                         }
                     )

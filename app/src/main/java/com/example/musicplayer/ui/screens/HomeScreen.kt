@@ -31,7 +31,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import com.example.musicplayer.backend.AudioFetcher
 import com.example.musicplayer.data.sampleSongs
+import com.example.musicplayer.data.toRecentlyPlayedSong
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
+import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -39,12 +42,14 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel(),
     miniPlayerViewModel: MiniPlayerViewModel,
+    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel(),
     onMenuClick: () -> Unit
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val audioViewModel: AudioViewModel = viewModel()
     val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     // Request permissions and fetch songs
     LaunchedEffect(Unit) {
@@ -104,6 +109,11 @@ fun HomeScreen(
                     onSongClick = { song ->
                         if (song.id.isNotEmpty() && song.path.isNotEmpty()) {
                             miniPlayerViewModel.updateSong(song)
+                            coroutineScope.launch {
+                                recentlyPlayedViewModel.addRecentlyPlayed(
+                                    song.toRecentlyPlayedSong(System.currentTimeMillis())
+                                )
+                            }
                         } else {
                             Log.e("HomeScreen", "Invalid song data: $song")
                         }
