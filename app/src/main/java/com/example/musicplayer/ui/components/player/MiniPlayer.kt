@@ -48,16 +48,17 @@ fun MiniPlayer(
 ) {
     val currentSong by viewModel.currentSong.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
-    val progress by viewModel.progress.collectAsState()
+  val progress by viewModel.progress.collectAsState()
+
     val cornerRadius = 20.dp
 
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .height(64.dp)
-            .clip(AppShapes.large)
-            .clickable { onExpandClick() },
+          .fillMaxWidth()
+          .padding(horizontal = 16.dp)
+          .height(64.dp)
+          .clip(AppShapes.large)
+          .clickable { onExpandClick() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
@@ -69,14 +70,14 @@ fun MiniPlayer(
                 onPlayPauseClick = { viewModel.togglePlayPause() },
                 viewModel = viewModel,
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp)
+                  .weight(1f)
+                  .padding(horizontal = 16.dp)
             )
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = cornerRadius + 5.dp)
+                  .fillMaxWidth()
+                  .padding(horizontal = cornerRadius + 5.dp)
             ) {
                 MiniProgressTrack(progress = progress)
             }
@@ -93,8 +94,8 @@ private fun MiniPlayerContent(
 ) {
     Row(
         modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
+          .fillMaxSize()
+          .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -143,11 +144,11 @@ private fun MiniAlbumArt(viewModel: MiniPlayerViewModel) {
 
     Box(
         modifier = Modifier
-            .size(44.dp)
-            .background(
-                color = Color.White.copy(alpha = 0.2f),
-                shape = CircleShape
-            ),
+          .size(44.dp)
+          .background(
+            color = Color.White.copy(alpha = 0.2f),
+            shape = CircleShape
+          ),
         contentAlignment = Alignment.Center
     ) {
         if (albumArtUri != null) {
@@ -180,13 +181,13 @@ private fun PlayPauseButton(
 ) {
     Box(
         modifier = Modifier
-            .size(44.dp)
-            .clip(CircleShape)
-            .background(
-                color = Color.White.copy(alpha = 0.2f),
-                shape = CircleShape
-            )
-            .clickable(onClick = onClick),
+          .size(44.dp)
+          .clip(CircleShape)
+          .background(
+            color = Color.White.copy(alpha = 0.2f),
+            shape = CircleShape
+          )
+          .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Icon(
