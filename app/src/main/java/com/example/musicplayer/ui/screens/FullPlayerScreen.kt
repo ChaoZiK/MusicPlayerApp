@@ -122,6 +122,7 @@ fun FullPlayerScreen(
                     isShuffleEnabled = isShuffleEnabled,
                     repeatMode = repeatMode,
                     onProgressChange = { viewModel.updateProgress(it) },
+                    onProgressComplete = { viewModel.seekTo(progress) },
                     onPlayPauseClick = { viewModel.togglePlayPause() },
                     onShuffleClick = { viewModel.toggleShuffle() },
                     onPreviousClick = { viewModel.playPrevious() },

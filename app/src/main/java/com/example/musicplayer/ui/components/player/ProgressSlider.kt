@@ -83,6 +83,9 @@ fun ProgressSlider(
                     onProgressComplete()
                 }
             },
+            onValueChangeFinished = {
+                onProgressComplete()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .alpha(0f),

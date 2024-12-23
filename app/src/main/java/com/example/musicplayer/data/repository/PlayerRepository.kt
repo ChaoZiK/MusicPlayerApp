@@ -1,6 +1,7 @@
 package com.example.musicplayer.data.repository
 
 import android.util.Log
+import com.example.musicplayer.backend.MusicController
 import com.example.musicplayer.data.Song
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PlayerRepository @Inject constructor() {
+class PlayerRepository @Inject constructor(
+  private val musicController: MusicController
+) {
   private val scope = CoroutineScope(Dispatchers.Default)
 
   private val _currentSong = MutableStateFlow<Song?>(null)
@@ -194,6 +197,14 @@ class PlayerRepository @Inject constructor() {
     }
   }
 
+  fun seekToProgress(newProgress: Float) {
+    val totalSeconds = (_totalTime.value.split(":")[0].toInt() * 60) +
+            _totalTime.value.split(":")[1].toInt()
+    val seekPositionMillis = (totalSeconds * newProgress).toInt() * 1000 // Convert to milliseconds
+    musicController.seekTo(seekPositionMillis) // Delegate to MusicController
+    _progress.value = newProgress
+    _currentTime.value = calculateTime(newProgress)
+  }
 
   fun toggleShuffle() {
     _isShuffleEnabled.value = !_isShuffleEnabled.value

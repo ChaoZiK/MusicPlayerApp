@@ -24,11 +24,19 @@ object AppModule {
     @Singleton
     fun provideMusicController(
         context: Context,
-        playerRepository: PlayerRepository
+        playerRepository: dagger.Lazy<PlayerRepository>
     ): MusicController {
         return MusicController(context) { song ->
-            playerRepository.updateSong(song)
+            playerRepository.get().updateSong(song)
         }
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayerRepository(
+        musicController: MusicController
+    ): PlayerRepository {
+        return PlayerRepository(musicController)
     }
 }
 

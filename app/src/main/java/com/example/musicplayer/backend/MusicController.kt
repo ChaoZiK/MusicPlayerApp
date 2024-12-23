@@ -73,5 +73,16 @@ class MusicController(private val context: Context, private val onSongChanged: (
   fun isPlaying(): Boolean {
     return mediaPlayer?.isPlaying == true
   }
+
+  fun seekTo(positionMillis: Int) {
+    mediaPlayer?.let {
+      try {
+        it.seekTo(positionMillis)
+      } catch (e: Exception) {
+        Log.e("MusicController", "Error seeking to position: ${e.message}", e)
+      }
+    }
+  }
+
 }
 

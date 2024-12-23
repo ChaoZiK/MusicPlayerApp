@@ -88,6 +88,10 @@ class FullPlayerViewModel @Inject constructor(
         playerRepository.togglePlayPause() // Start progress updates
     }
 
+    fun seekTo(newProgress: Float) {
+        playerRepository.seekToProgress(newProgress)
+    }
+
     fun toggleShuffle() {
         playerRepository.toggleShuffle()
     }
