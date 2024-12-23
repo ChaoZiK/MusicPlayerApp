@@ -75,7 +75,7 @@ fun ProgressSlider(
         )
 
         Slider(
-            value = clampedProgress,
+            value = progress,
             onValueChange = { newValue ->
                 val limitedValue = newValue.coerceIn(0f, 1f)
                 onProgressChange(limitedValue)
@@ -84,7 +84,7 @@ fun ProgressSlider(
                 }
             },
             modifier = Modifier
-                .width(trackWidth)
+                .fillMaxWidth()
                 .alpha(0f),
             colors = SliderDefaults.colors(
                 thumbColor = Color.Transparent,

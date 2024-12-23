@@ -32,6 +32,8 @@ class PlayerRepository @Inject constructor() {
   val totalTime = _totalTime.asStateFlow()
 
   private val _playlist = MutableStateFlow<List<Song>>(emptyList())
+  val playlist = _playlist.asStateFlow()
+
   private val _currentIndex = MutableStateFlow(0)
   private val _artUri = MutableStateFlow<String?>(null)
   val artUri = _artUri.asStateFlow()
@@ -42,10 +44,23 @@ class PlayerRepository @Inject constructor() {
   private val _artist = MutableStateFlow("")
   val artist = _artist.asStateFlow()
 
-  private var progressUpdateJob: Job? = null
+  private val _isFavorite = MutableStateFlow(false)
+  val isFavorite = _isFavorite.asStateFlow()
+
+  private val _isShuffleEnabled = MutableStateFlow(false)
+  val isShuffleEnabled = _isShuffleEnabled.asStateFlow()
+
+  private val _repeatMode = MutableStateFlow(RepeatMode.NONE)
+  val repeatMode = _repeatMode.asStateFlow()
+
+  enum class RepeatMode {
+    NONE, ALL, ONE
+  }
 
   private val _volume = MutableStateFlow(0.5f)
   val volume = _volume.asStateFlow()
+
+  private var progressUpdateJob: Job? = null
 
   fun updateVolume(newVolume: Float) {
     _volume.value = newVolume.coerceIn(0f, 1f)
@@ -60,6 +75,7 @@ class PlayerRepository @Inject constructor() {
     resetProgress()
     _isPlaying.value = false
   }
+
 
   fun togglePlayPause() {
     _isPlaying.value = !_isPlaying.value
@@ -89,9 +105,24 @@ class PlayerRepository @Inject constructor() {
     _currentTime.value = calculateTime(newProgress)
   }
 
+  fun updatePlaylist(newPlaylist: List<Song>) {
+    _playlist.value = newPlaylist
+    _currentIndex.value = 0 // Reset index to start of the new playlist
+  }
+
+  fun updateSongByIndex(index: Int) {
+    if (index in _playlist.value.indices) {
+      _currentIndex.value = index
+      updateSong(_playlist.value[index])
+    } else {
+      Log.e("PlayerRepository", "Invalid song index: $index")
+    }
+  }
+
+
   private fun calculateTime(progress: Float): String {
     val totalSeconds = (_totalTime.value.split(":")[0].toInt() * 60) +
-      _totalTime.value.split(":")[1].toInt()
+            _totalTime.value.split(":")[1].toInt()
     val currentSeconds = (totalSeconds * progress).toInt()
     val minutes = currentSeconds / 60
     val seconds = currentSeconds % 60
@@ -106,7 +137,7 @@ class PlayerRepository @Inject constructor() {
       delay(delayTime)
       if (_isPlaying.value) {
         val totalSeconds = (_totalTime.value.split(":")[0].toInt() * 60) +
-          _totalTime.value.split(":")[1].toInt()
+                _totalTime.value.split(":")[1].toInt()
         val deltaProgress = 1f / (totalSeconds * updatesPerSecond)
         val currentProgress = _progress.value
 
@@ -120,42 +151,65 @@ class PlayerRepository @Inject constructor() {
       }
     }
   }
-  fun onProgressComplete() {
-    val song = _currentSong.value
-    if (song != null) {
-      Log.d("PlayerRepository", "Song completed: ${song.title}")
-      _isPlaying.value = false
-      _progress.value = 0f
-      _currentTime.value = "00:00"
+
+
+  fun nextSong(): Song? {
+    if (_playlist.value.isEmpty()) {
+      Log.e("PlayerRepository", "Playlist is empty. Cannot play next song.")
+      return null
+    }
+    val newIndex = if (_isShuffleEnabled.value) {
+      (0 until _playlist.value.size).random()
     } else {
-      Log.e("PlayerRepository", "No current song to complete.")
+      (_currentIndex.value + 1) % _playlist.value.size
+    }
+    _currentIndex.value = newIndex
+    return _playlist.value[newIndex]
+  }
+
+
+  fun previousSong(): Song? {
+    if (_playlist.value.isEmpty()) {
+      Log.e("PlayerRepository", "Playlist is empty. Cannot play previous song.")
+      return null
+    }
+    val newIndex = if (_currentIndex.value - 1 < 0) {
+      _playlist.value.size - 1
+    } else {
+      _currentIndex.value - 1
+    }
+    _currentIndex.value = newIndex
+    return _playlist.value[newIndex]
+  }
+
+
+  fun toggleShuffle() {
+    _isShuffleEnabled.value = !_isShuffleEnabled.value
+  }
+
+  fun toggleRepeat() {
+    _repeatMode.value = when (_repeatMode.value) {
+      RepeatMode.NONE -> RepeatMode.ALL
+      RepeatMode.ALL -> RepeatMode.ONE
+      RepeatMode.ONE -> RepeatMode.NONE
+    }
+  }
+
+  fun toggleFavorite(song: Song?) {
+    if (song != null) {
+      _isFavorite.value = !_isFavorite.value
+      Log.d("PlayerRepository", "Favorite toggled for song: ${song.title}")
+    }
+  }
+
+  private fun parseDurationToSeconds(duration: String): Int {
+    val parts = duration.split(":")
+    return if (parts.size == 2) {
+      parts[0].toInt() * 60 + parts[1].toInt()
+    } else {
+      0
     }
   }
 
 
-  fun playCurrentSong() {
-    val song = _currentSong.value
-    if (song != null) {
-      Log.d("PlayerRepository", "Playing song: ${song.title}")
-      _isPlaying.value = true
-      progressUpdateJob?.cancel()
-      progressUpdateJob = scope.launch {
-        startProgressUpdate()
-      }
-    } else {
-      Log.e("PlayerRepository", "No current song to play.")
-    }
-  }
-  fun stopCurrentSong() {
-    val song = _currentSong.value
-    if (song != null) {
-      Log.d("PlayerRepository", "Stopping song: ${song.title}")
-      _isPlaying.value = false
-      progressUpdateJob?.cancel()
-      _progress.value = 0f
-      _currentTime.value = "00:00"
-    } else {
-      Log.e("PlayerRepository", "No current song to stop.")
-    }
-  }
 }

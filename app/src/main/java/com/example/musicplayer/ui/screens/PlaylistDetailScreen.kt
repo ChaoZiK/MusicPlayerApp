@@ -9,6 +9,7 @@ import com.example.musicplayer.data.Song
 import com.example.musicplayer.data.SortDirection
 import com.example.musicplayer.data.SortOption
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
+import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
 fun PlaylistDetailScreen(
@@ -16,10 +17,15 @@ fun PlaylistDetailScreen(
     onBackPressed: () -> Unit,
     onSearchClick: () -> Unit,
     onSongClick: (Song) -> Unit,
-    onSortSelected: (SortOption, SortDirection) -> Unit
+    onSortSelected: (SortOption, SortDirection) -> Unit,
+    miniPlayerViewModel: MiniPlayerViewModel
 ) {
   val context = LocalContext.current
-  val musicController = remember { MusicController(context) } // Khởi tạo MusicController
+  val musicController = remember {
+    MusicController(context) { song ->
+      miniPlayerViewModel.updateSong(song) // Update the mini-player when a song is played
+    }
+  }
 
   SongsContentLayout(
     songs = playlist.songs,
@@ -27,20 +33,21 @@ fun PlaylistDetailScreen(
     topBarTitle = playlist.title,
     onBackPressed = onBackPressed,
     onSearchClick = onSearchClick,
-    onShuffleClick = { /* Logic xáo trộn bài hát */ },
+    onShuffleClick = {
+      musicController.shuffleAndPlay(playlist.songs)
+    },
     onPlayClick = {
-      // Logic phát toàn bộ danh sách
-      playlist.songs.forEach { song ->
+      playlist.songs.firstOrNull()?.let { song ->
         musicController.playSong(song)
       }
     },
     onSongClick = { song ->
-      // Logic phát bài hát cụ thể
       musicController.playSong(song)
     },
     onSortSelected = { option, direction ->
       // Logic sắp xếp
-    }
+    },
+    miniPlayerViewModel = miniPlayerViewModel
   )
 }
 

@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import com.example.musicplayer.ui.components.buttons.MediaControlButton
 import com.example.musicplayer.ui.components.buttons.PlayPauseButton
 import com.example.musicplayer.ui.theme.AppIcons
-import com.example.musicplayer.ui.viewmodel.RepeatMode
+import com.example.musicplayer.data.repository.PlayerRepository.RepeatMode
 
 @Composable
 fun MediaControls(

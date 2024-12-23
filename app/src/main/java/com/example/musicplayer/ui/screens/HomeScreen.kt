@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import com.example.musicplayer.backend.AudioFetcher
+import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
@@ -39,7 +40,8 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel(),
     miniPlayerViewModel: MiniPlayerViewModel,
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    fullPlayerViewModel: FullPlayerViewModel = hiltViewModel()
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val audioViewModel: AudioViewModel = viewModel()
@@ -99,12 +101,11 @@ fun HomeScreen(
                 0 -> SongsScreen(
                     // Replace 'sampleSongs' to 'songs' to use music from your device
                     songs = songs,
-                    onSongClick = { song ->
-                        miniPlayerViewModel.updateSong(song)
-                    },
                     onSortSelected = { option, direction ->
                         // Handle sort
-                    }
+                    },
+                    miniPlayerViewModel = miniPlayerViewModel,
+                    fullPlayerViewModel = fullPlayerViewModel
                 )
                 1 -> PlaylistScreen(navController = navController)
             }

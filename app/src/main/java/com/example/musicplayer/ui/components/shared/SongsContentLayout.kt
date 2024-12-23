@@ -29,6 +29,7 @@ import com.example.musicplayer.ui.components.sheets.SortSheet
 import com.example.musicplayer.ui.components.playlist.PlaylistDetailTopBar
 import com.example.musicplayer.ui.components.sheets.SongBottomSheetsManager
 import com.example.musicplayer.ui.components.song.SongsHeader
+import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,10 +44,13 @@ fun SongsContentLayout(
   onSongClick: ((Song) -> Unit)? = null, // Phát bài hát cụ thể
   onPlayClick: (() -> Unit)? = null, // Phát toàn bộ danh sách
   onSortSelected: ((SortOption, SortDirection) -> Unit)? = null,
+  miniPlayerViewModel: MiniPlayerViewModel
 ) {
   // Context để khởi tạo MusicController
   val context = LocalContext.current
-  val musicController = remember { MusicController(context) }
+  val musicController = remember {
+      MusicController(context)
+      {song -> miniPlayerViewModel.updateSong(song)}}
 
   // Trạng thái UI
   var showSortDialog by remember { mutableStateOf(false) }
@@ -84,8 +88,9 @@ fun SongsContentLayout(
             musicController.shuffleAndPlay(songs)
                            },
           onPlayClick = {
-            onPlayClick?.invoke()
-            songs.firstOrNull()?.let { musicController.playSong(it) }
+            songs.firstOrNull()?.let { song ->
+              musicController.playSong(song)
+            }
           }
         )
 
@@ -93,7 +98,6 @@ fun SongsContentLayout(
           songs = songs,
           onSongClick = { song ->
             onSongClick?.invoke(song)
-            musicController.playSong(song)
           },
           onMoreClick = { song ->
             selectedSong = song

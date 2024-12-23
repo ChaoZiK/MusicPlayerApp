@@ -10,7 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.musicplayer.ui.viewmodel.RepeatMode
+import com.example.musicplayer.data.repository.PlayerRepository.RepeatMode
 
 @Composable
 fun PlayerControls(
@@ -37,7 +37,7 @@ fun PlayerControls(
             )
             .padding(horizontal = 28.dp, vertical = 36.dp)
     ) {
-        Column{
+        Column {
             ProgressSlider(
                 progress = progress,
                 onProgressChange = onProgressChange,
