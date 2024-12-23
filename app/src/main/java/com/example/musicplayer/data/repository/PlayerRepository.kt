@@ -164,9 +164,11 @@ class PlayerRepository @Inject constructor() {
       (_currentIndex.value + 1) % _playlist.value.size
     }
     _currentIndex.value = newIndex
-    return _playlist.value[newIndex]
+    val nextSong = _playlist.value[newIndex]
+    updateSong(nextSong)
+    restartProgressUpdates() // Restart progress updates
+    return nextSong
   }
-
 
   fun previousSong(): Song? {
     if (_playlist.value.isEmpty()) {
@@ -179,7 +181,17 @@ class PlayerRepository @Inject constructor() {
       _currentIndex.value - 1
     }
     _currentIndex.value = newIndex
-    return _playlist.value[newIndex]
+    val previousSong = _playlist.value[newIndex]
+    updateSong(previousSong)
+    restartProgressUpdates() // Restart progress updates
+    return previousSong
+  }
+
+  private fun restartProgressUpdates() {
+    progressUpdateJob?.cancel() // Cancel any existing job
+    progressUpdateJob = scope.launch {
+      startProgressUpdate()
+    }
   }
 
 

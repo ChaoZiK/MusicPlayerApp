@@ -68,16 +68,10 @@ class FullPlayerViewModel @Inject constructor(
             return
         }
 
-        if (nextSong == playerRepository.currentSong.value) {
-            Log.d("FullPlayerViewModel", "Next song is already playing: ${nextSong.title}. Skipping.")
-            return
-        }
-
         Log.d("FullPlayerViewModel", "Playing next song: ${nextSong.title}")
-
         musicController.stop() // Stop the current song
-        playerRepository.updateSong(nextSong)
         musicController.playSong(nextSong) // Play the next song
+        playerRepository.togglePlayPause() // Start progress updates
     }
 
 
@@ -88,16 +82,10 @@ class FullPlayerViewModel @Inject constructor(
             return
         }
 
-        if (previousSong == playerRepository.currentSong.value) {
-            Log.d("FullPlayerViewModel", "Previous song is already playing: ${previousSong.title}. Skipping.")
-            return
-        }
-
         Log.d("FullPlayerViewModel", "Playing previous song: ${previousSong.title}")
-
         musicController.stop() // Stop the current song
-        playerRepository.updateSong(previousSong)
         musicController.playSong(previousSong) // Play the previous song
+        playerRepository.togglePlayPause() // Start progress updates
     }
 
     fun toggleShuffle() {
