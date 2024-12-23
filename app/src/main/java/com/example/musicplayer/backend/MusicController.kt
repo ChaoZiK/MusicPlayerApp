@@ -48,7 +48,19 @@ class MusicController(private val context: Context, private val onSongChanged: (
     }
   }
 
+  fun togglePlayPause() {
+    mediaPlayer?.let {
+      if (it.isPlaying) {
+        it.pause() // Pause the song
+      } else {
+        it.start() // Resume the song from the current position
+      }
+    }
+  }
 
+  fun continuePlaying() {
+      mediaPlayer?.start()
+  }
 
   fun pause() {
     mediaPlayer?.pause()

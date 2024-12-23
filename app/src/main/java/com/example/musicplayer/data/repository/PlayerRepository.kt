@@ -88,8 +88,10 @@ class PlayerRepository @Inject constructor(
       progressUpdateJob = scope.launch {
         startProgressUpdate()
       }
+      musicController.continuePlaying()
     } else {
       progressUpdateJob?.cancel()
+      musicController.togglePlayPause()
     }
   }
 

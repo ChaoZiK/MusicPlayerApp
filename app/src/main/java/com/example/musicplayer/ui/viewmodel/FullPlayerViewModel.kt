@@ -53,11 +53,6 @@ class FullPlayerViewModel @Inject constructor(
 
 
     fun togglePlayPause() {
-        if (playerRepository.isPlaying.value) {
-            musicController.pause()
-        } else {
-            playerRepository.currentSong.value?.let { musicController.playSong(it) }
-        }
         playerRepository.togglePlayPause()
     }
 
