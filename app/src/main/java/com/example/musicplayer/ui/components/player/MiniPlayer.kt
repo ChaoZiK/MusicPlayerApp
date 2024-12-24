@@ -1,7 +1,9 @@
 package com.example.musicplayer.ui.components.player
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -126,13 +129,20 @@ private fun SongInfo(
             Text(
                 text = songTitle,
                 color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.basicMarquee(
+                    animationMode = MarqueeAnimationMode.Immediately,
+                    iterations = Int.MAX_VALUE
+                )
+
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = artist,
                 color = Color.White.copy(alpha = 0.7f),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

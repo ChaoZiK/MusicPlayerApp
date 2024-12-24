@@ -12,10 +12,11 @@ import com.example.musicplayer.ui.theme.AppIcons
 
 @Composable
 fun ShareButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     IconButton(
-        onClick = { },
+        onClick = onClick,
         modifier = modifier.size(40.dp)
     ) {
         Icon(

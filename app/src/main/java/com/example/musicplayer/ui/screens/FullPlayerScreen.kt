@@ -1,5 +1,9 @@
 package com.example.musicplayer.ui.screens
 
+import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.MarqueeAnimationMode
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,16 +22,20 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.musicplayer.backend.shareAudioFile
 import com.example.musicplayer.ui.components.buttons.AddToPlaylistButton
 import com.example.musicplayer.ui.components.buttons.CurrentPlayingButton
 import com.example.musicplayer.ui.components.buttons.DownButton
@@ -38,6 +46,7 @@ import com.example.musicplayer.ui.components.player.AlbumArt
 import com.example.musicplayer.ui.components.player.PlayerControls
 import com.example.musicplayer.ui.components.sheets.FullPlayerOptionsSheet
 import com.example.musicplayer.ui.components.sheets.SongDetailsSheet
+import com.example.musicplayer.ui.viewmodel.AudioViewModel
 import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +68,9 @@ fun FullPlayerScreen(
     val repeatMode by viewModel.repeatMode.collectAsState()
     var showOptionsSheet by remember { mutableStateOf(false) }
     var showDetails by remember { mutableStateOf(false) }
+    val audioViewModel: AudioViewModel = viewModel()
+    val songs by audioViewModel.songs.observeAsState(emptyList())
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -69,8 +81,7 @@ fun FullPlayerScreen(
         ) {
             TopBar(
                 onBackClick = onBackClick,
-                onMoreClick = { showOptionsSheet = true },
-                title = currentSong?.title ?: "Playing"
+                onMoreClick = { showOptionsSheet = true }
             )
 
             ConstraintLayout(
@@ -106,7 +117,15 @@ fun FullPlayerScreen(
                         width = Dimension.fillToConstraints
                     },
                     isFavorite = isFavorite,
-                    onFavoriteClick = { viewModel.toggleFavorite() }
+                    onFavoriteClick = { viewModel.toggleFavorite() },
+                    onShareClick = {
+                        currentSong?.let { song ->
+                            shareAudioFile(
+                                context = context,
+                                filePath = song.path
+                            )
+                        }
+                    }
                 )
 
                 PlayerControls(
@@ -171,7 +190,6 @@ private fun TopBar(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onMoreClick: () -> Unit,
-    title: String
 ) {
     Row(
         modifier = modifier
@@ -181,20 +199,6 @@ private fun TopBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         DownButton(onBackClick = onBackClick)
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Download",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-            )
-        }
         MoreButton(onMoreClick = onMoreClick)
     }
 }
@@ -212,9 +216,13 @@ private fun SongInfo(
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.basicMarquee(
+                animationMode = MarqueeAnimationMode.Immediately,
+                iterations = Int.MAX_VALUE
+            )
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = artist,
             style = MaterialTheme.typography.bodyLarge,
@@ -227,7 +235,8 @@ private fun SongInfo(
 private fun ActionButtons(
     modifier: Modifier = Modifier,
     isFavorite: Boolean,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    onShareClick: () -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -239,7 +248,7 @@ private fun ActionButtons(
             onClick = onFavoriteClick
         )
         AddToPlaylistButton()
-        ShareButton()
+        ShareButton(onClick = onShareClick)
         CurrentPlayingButton()
     }
 }
