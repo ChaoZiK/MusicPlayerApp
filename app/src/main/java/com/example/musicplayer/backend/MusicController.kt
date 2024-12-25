@@ -51,9 +51,9 @@ class MusicController(private val context: Context, private val onSongChanged: (
   fun togglePlayPause() {
     mediaPlayer?.let {
       if (it.isPlaying) {
-        it.pause() // Pause the song
+        it.pause()
       } else {
-        it.start() // Resume the song from the current position
+        it.start()
       }
     }
   }
@@ -67,12 +67,11 @@ class MusicController(private val context: Context, private val onSongChanged: (
   }
 
   fun stop() {
-    if (mediaPlayer != null) {
-      Log.d("MusicController", "Stopping song: ${currentSong?.title}")
+    mediaPlayer?.apply {
       try {
-        mediaPlayer?.stop()
-        mediaPlayer?.reset()
-        mediaPlayer?.release()
+        stop()
+        reset()
+        release()
       } catch (e: Exception) {
         Log.e("MusicController", "Error stopping player: ${e.message}")
       } finally {
@@ -81,6 +80,7 @@ class MusicController(private val context: Context, private val onSongChanged: (
     }
     currentSong = null
   }
+
 
   fun isPlaying(): Boolean {
     return mediaPlayer?.isPlaying == true

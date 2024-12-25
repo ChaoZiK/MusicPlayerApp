@@ -40,19 +40,17 @@ fun SongsContentLayout(
   topBarTitle: String = "",
   onBackPressed: (() -> Unit)? = null,
   onSearchClick: (() -> Unit)? = null,
-  onShuffleClick: ((Song) -> Unit)? = null,
-  onSongClick: ((Song) -> Unit)? = null, // Phát bài hát cụ thể
-  onPlayClick: (() -> Unit)? = null, // Phát toàn bộ danh sách
+  onShuffleClick: (() -> Unit)? = null,
+  onSongClick: ((Song) -> Unit)? = null,
+  onPlayClick: (() -> Unit)? = null,
   onSortSelected: ((SortOption, SortDirection) -> Unit)? = null,
   miniPlayerViewModel: MiniPlayerViewModel
 ) {
-  // Context để khởi tạo MusicController
   val context = LocalContext.current
   val musicController = remember {
       MusicController(context)
       {song -> miniPlayerViewModel.updateSong(song)}}
 
-  // Trạng thái UI
   var showSortDialog by remember { mutableStateOf(false) }
   var showOptions by remember { mutableStateOf(false) }
   var showDetails by remember { mutableStateOf(false) }
@@ -60,7 +58,6 @@ fun SongsContentLayout(
 
   Box(modifier = modifier.fillMaxSize()) {
     Column(modifier = Modifier.fillMaxSize()) {
-      // Thanh công cụ trên cùng
       if (showTopBar) {
         PlaylistDetailTopBar(
           onBackClick = { onBackPressed?.invoke() },
@@ -69,13 +66,11 @@ fun SongsContentLayout(
         )
       }
 
-      // Header: Số lượng bài hát và tùy chọn sắp xếp
       SongsHeader(
         songCount = songs.size,
         onSortClick = { showSortDialog = true }
       )
 
-      // Nội dung danh sách bài hát
       if (songs.isEmpty()) {
         EmptyList(
           modifier = Modifier
@@ -85,12 +80,10 @@ fun SongsContentLayout(
       } else {
         ControlButtonsLayout(
           onShuffleClick = {
-            musicController.shuffleAndPlay(songs)
-                           },
+            onShuffleClick?.invoke()
+          },
           onPlayClick = {
-            songs.firstOrNull()?.let { song ->
-              musicController.playSong(song)
-            }
+            onPlayClick?.invoke()
           }
         )
 
@@ -107,7 +100,6 @@ fun SongsContentLayout(
       }
     }
 
-    // Bottom sheet quản lý các tùy chọn
     SongBottomSheetsManager(
       selectedSong = selectedSong,
       showOptions = showOptions,
@@ -126,7 +118,6 @@ fun SongsContentLayout(
       }
     )
 
-    // Dialog sắp xếp
     if (showSortDialog) {
       ModalBottomSheet(
         onDismissRequest = { showSortDialog = false },
@@ -155,7 +146,6 @@ fun SongsContentLayout(
       }
     }
 
-    // Bottom sheet hiển thị chi tiết bài hát
     if (showDetails && selectedSong != null) {
       ModalBottomSheet(
         onDismissRequest = {

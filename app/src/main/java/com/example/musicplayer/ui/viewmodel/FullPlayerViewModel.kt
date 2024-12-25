@@ -1,6 +1,8 @@
 package com.example.musicplayer.ui.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musicplayer.backend.MusicController
 import com.example.musicplayer.data.Song
@@ -26,6 +28,17 @@ class FullPlayerViewModel @Inject constructor(
     val isShuffleEnabled = playerRepository.isShuffleEnabled
     val repeatMode = playerRepository.repeatMode
     val volume = playerRepository.volume
+
+    private val _snackbarMessage = MutableLiveData<String?>()
+    val snackbarMessage: LiveData<String?> = _snackbarMessage
+
+    fun showSnackbarMessage(message: String) {
+        _snackbarMessage.value = message
+    }
+
+    fun clearSnackbarMessage() {
+        _snackbarMessage.value = null
+    }
 
     fun updateVolume(newVolume: Float) {
         playerRepository.updateVolume(newVolume)
@@ -89,10 +102,22 @@ class FullPlayerViewModel @Inject constructor(
 
     fun toggleShuffle() {
         playerRepository.toggleShuffle()
+        val message = if (playerRepository.isShuffleEnabled.value) {
+            "Shuffle enabled"
+        } else {
+            "Shuffle disabled"
+        }
+        showSnackbarMessage(message)
     }
 
     fun toggleRepeat() {
         playerRepository.toggleRepeat()
+        val message = when (playerRepository.repeatMode.value) {
+            PlayerRepository.RepeatMode.NONE -> "Repeat mode: None"
+            PlayerRepository.RepeatMode.ALL -> "Repeat mode: All"
+            PlayerRepository.RepeatMode.ONE -> "Repeat mode: One"
+        }
+        showSnackbarMessage(message)
     }
 
     fun updateProgress(progress: Float) {

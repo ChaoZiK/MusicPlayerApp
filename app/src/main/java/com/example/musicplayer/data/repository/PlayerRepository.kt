@@ -79,6 +79,22 @@ class PlayerRepository @Inject constructor(
     _isPlaying.value = false
   }
 
+  fun shuffle() {
+    if (_playlist.value.isNotEmpty()) {
+      val randomIndex = (0 until _playlist.value.size).random()
+      updateSongByIndex(randomIndex)
+      musicController.playSong(_playlist.value[randomIndex])
+      _isPlaying.value = false
+    }
+  }
+
+  fun playFirstSong() {
+    if (_playlist.value.isNotEmpty()) {
+      updateSongByIndex(0)
+      musicController.playSong(_playlist.value[0])
+      _isPlaying.value = false
+    }
+  }
 
   fun togglePlayPause() {
     _isPlaying.value = !_isPlaying.value
@@ -112,7 +128,7 @@ class PlayerRepository @Inject constructor(
 
   fun updatePlaylist(newPlaylist: List<Song>) {
     _playlist.value = newPlaylist
-    _currentIndex.value = 0 // Reset index to start of the new playlist
+    _currentIndex.value = 0
   }
 
   fun updateSongByIndex(index: Int) {
@@ -148,8 +164,21 @@ class PlayerRepository @Inject constructor(
 
         val nextProgress = currentProgress + deltaProgress
         if (nextProgress >= 1f) {
-          resetProgress()
-          _isPlaying.value = false
+          when (_repeatMode.value) {
+            RepeatMode.ONE -> {
+              resetProgress()
+              musicController.stop()
+              musicController.playSong(_currentSong.value!!)
+              _isPlaying.value = true
+            }
+            RepeatMode.ALL -> nextSong()
+            RepeatMode.NONE -> {
+              nextSong() ?: run {
+                resetProgress()
+                _isPlaying.value = false
+              }
+            }
+          }
         } else {
           updateProgress(nextProgress)
         }
@@ -157,21 +186,41 @@ class PlayerRepository @Inject constructor(
     }
   }
 
-
   fun nextSong(): Song? {
     if (_playlist.value.isEmpty()) {
       Log.e("PlayerRepository", "Playlist is empty. Cannot play next song.")
       return null
     }
-    val newIndex = if (_isShuffleEnabled.value) {
-      (0 until _playlist.value.size).random()
-    } else {
-      (_currentIndex.value + 1) % _playlist.value.size
+
+
+    val newIndex = when {
+      _isShuffleEnabled.value -> {
+        if (_playlist.value.size > 1) {
+          (0 until _playlist.value.size).filter { it != _currentIndex.value }.random()
+        } else {
+          _currentIndex.value
+        }
+      }
+
+      _repeatMode.value == RepeatMode.NONE && _currentIndex.value + 1 >= _playlist.value.size -> {
+        return null
+      }
+
+      else -> {
+        if (_currentIndex.value + 1 >= _playlist.value.size) {
+          0
+        } else {
+          _currentIndex.value + 1
+        }
+      }
     }
+
     _currentIndex.value = newIndex
     val nextSong = _playlist.value[newIndex]
     updateSong(nextSong)
-    restartProgressUpdates() // Restart progress updates
+    musicController.playSong(nextSong)
+    restartProgressUpdates()
+    _isPlaying.value = true
     return nextSong
   }
 
@@ -180,20 +229,37 @@ class PlayerRepository @Inject constructor(
       Log.e("PlayerRepository", "Playlist is empty. Cannot play previous song.")
       return null
     }
-    val newIndex = if (_currentIndex.value - 1 < 0) {
-      _playlist.value.size - 1
-    } else {
-      _currentIndex.value - 1
+
+    val newIndex = when {
+      _repeatMode.value == RepeatMode.NONE && _currentIndex.value == 0 -> {
+        _currentIndex.value
+      }
+
+      else -> {
+        if (_currentIndex.value - 1 < 0) {
+          _playlist.value.size - 1
+        } else {
+          _currentIndex.value - 1
+        }
+      }
     }
-    _currentIndex.value = newIndex
-    val previousSong = _playlist.value[newIndex]
-    updateSong(previousSong)
-    restartProgressUpdates() // Restart progress updates
-    return previousSong
+
+    if (newIndex != _currentIndex.value) {
+      _currentIndex.value = newIndex
+      val previousSong = _playlist.value[newIndex]
+      updateSong(previousSong)
+      musicController.playSong(previousSong)
+      restartProgressUpdates()
+      _isPlaying.value = true
+      return previousSong
+    } else {
+      return _playlist.value[_currentIndex.value]
+    }
   }
 
+
   private fun restartProgressUpdates() {
-    progressUpdateJob?.cancel() // Cancel any existing job
+    progressUpdateJob?.cancel()
     progressUpdateJob = scope.launch {
       startProgressUpdate()
     }
@@ -202,8 +268,8 @@ class PlayerRepository @Inject constructor(
   fun seekToProgress(newProgress: Float) {
     val totalSeconds = (_totalTime.value.split(":")[0].toInt() * 60) +
             _totalTime.value.split(":")[1].toInt()
-    val seekPositionMillis = (totalSeconds * newProgress).toInt() * 1000 // Convert to milliseconds
-    musicController.seekTo(seekPositionMillis) // Delegate to MusicController
+    val seekPositionMillis = (totalSeconds * newProgress).toInt() * 1000
+    musicController.seekTo(seekPositionMillis)
     _progress.value = newProgress
     _currentTime.value = calculateTime(newProgress)
   }
@@ -235,6 +301,4 @@ class PlayerRepository @Inject constructor(
       0
     }
   }
-
-
 }

@@ -8,6 +8,7 @@ import com.example.musicplayer.data.SortDirection
 import com.example.musicplayer.data.SortOption
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
 import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
+import com.example.musicplayer.ui.viewmodel.HomeViewModel
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
@@ -15,11 +16,13 @@ fun SongsScreen(
     songs: List<Song>,
     miniPlayerViewModel: MiniPlayerViewModel,
     onSortSelected: (SortOption, SortDirection) -> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel(),
     fullPlayerViewModel: FullPlayerViewModel = hiltViewModel()
 ) {
 
     LaunchedEffect(songs) {
         fullPlayerViewModel.updatePlaylist(songs)
+        homeViewModel.updatePlaylist(songs)
     }
     SongsContentLayout(
         songs = songs,
@@ -30,7 +33,9 @@ fun SongsScreen(
             if (index != -1) {
                 fullPlayerViewModel.playSongByIndex(index)
             }
-        }
+        },
+        onShuffleClick = { homeViewModel.shuffleAndPlay() },
+        onPlayClick = { homeViewModel.playFirstSong() }
     )
 }
 

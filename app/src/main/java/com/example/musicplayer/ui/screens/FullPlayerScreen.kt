@@ -14,12 +14,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,6 +34,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -72,7 +80,31 @@ fun FullPlayerScreen(
     val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarMessage by viewModel.snackbarMessage.observeAsState()
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+
+    LaunchedEffect(snackbarMessage) {
+        snackbarMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearSnackbarMessage()
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = screenHeight * 0.07f),
+            snackbar = { snackbarData ->
+                CustomSnackbar(snackbarData = snackbarData)
+            }
+        )
+
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -253,4 +285,40 @@ private fun ActionButtons(
     }
 }
 
-
+@Composable
+fun CustomSnackbar(snackbarData: SnackbarData) {
+    androidx.compose.material3.Surface(
+        color = Color.Black,
+        shadowElevation = 4.dp,
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .width(140.dp)
+            .height(40.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = snackbarData.visuals.message,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.White
+                )
+            )
+            snackbarData.visuals.actionLabel?.let { actionLabel ->
+                Spacer(modifier = Modifier.width(8.dp))
+                TextButton(onClick = { snackbarData.performAction() }) {
+                    Text(
+                        text = actionLabel,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
