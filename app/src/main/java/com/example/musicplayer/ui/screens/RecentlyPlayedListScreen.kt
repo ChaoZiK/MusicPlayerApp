@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.musicplayer.data.RecentlyPlayedSong
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
+import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
 
 @Composable
@@ -14,7 +15,8 @@ fun RecentlyPlayedListScreen(
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     onSongClick: (RecentlyPlayedSong) -> Unit,
-    viewModel: RecentlyPlayedViewModel = hiltViewModel()
+    viewModel: RecentlyPlayedViewModel = hiltViewModel(),
+    miniPlayerViewModel: MiniPlayerViewModel
 ) {
     val recentlyPlayedSongs by viewModel.recentlyPlayedSongs.observeAsState(emptyList())
 
@@ -26,5 +28,6 @@ fun RecentlyPlayedListScreen(
         onSongClick = { song ->
             recentlyPlayedSongs.find { it.songId == song.id }?.let(onSongClick)
         },
+        miniPlayerViewModel = miniPlayerViewModel
     )
 }

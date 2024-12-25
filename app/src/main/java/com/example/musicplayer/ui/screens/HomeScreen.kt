@@ -30,7 +30,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import com.example.musicplayer.backend.AudioFetcher
-import com.example.musicplayer.data.sampleSongs
+import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.data.toRecentlyPlayedSong
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
@@ -42,8 +42,9 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel(),
     miniPlayerViewModel: MiniPlayerViewModel,
-    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel(),
-    onMenuClick: () -> Unit
+    onMenuClick: () -> Unit,
+    fullPlayerViewModel: FullPlayerViewModel = hiltViewModel(),
+    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel()
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val audioViewModel: AudioViewModel = viewModel()
@@ -99,8 +100,8 @@ fun HomeScreen(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+              .fillMaxSize()
+              .padding(innerPadding)
         ) { page ->
             when (page) {
                 0 -> SongsScreen(
@@ -121,7 +122,9 @@ fun HomeScreen(
                     },
                     onSortSelected = { option, direction ->
                         // Handle sort
-                    }
+                    },
+                    miniPlayerViewModel = miniPlayerViewModel,
+                    fullPlayerViewModel = fullPlayerViewModel
                 )
                 1 -> PlaylistScreen(navController = navController)
             }

@@ -113,7 +113,8 @@ private fun MusicNavGraph(
                         navController.navigate(Destinations.SEARCH)
                     },
                     onSongClick = { song -> miniPlayerViewModel.updateSong(song) },
-                    onSortSelected = { option, direction -> /* Handle sort */ }
+                    onSortSelected = { option, direction -> /* Handle sort */ },
+                    miniPlayerViewModel = miniPlayerViewModel
                 )
             }
         }
@@ -156,7 +157,8 @@ private fun MusicNavGraph(
                 onSearchClick = {
                     viewModel.activateSearch()
                     navController.navigate(Destinations.SEARCH)
-                }
+                },
+                miniPlayerViewModel = miniPlayerViewModel
             )
         }
 
@@ -173,7 +175,8 @@ private fun MusicNavGraph(
                 },
                 onSongClick = { song ->
                     navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
-                }
+                },
+                miniPlayerViewModel = miniPlayerViewModel
             )
         }
 

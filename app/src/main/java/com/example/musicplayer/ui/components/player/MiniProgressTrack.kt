@@ -20,7 +20,9 @@ fun MiniProgressTrack(
     progress: Float, modifier: Modifier = Modifier
 ) {
     val animatedProgress by animateProgress(
-        targetValue = progress, durationMillis = 100, easing = LinearEasing
+        targetValue = progress,
+        durationMillis = 500,
+        easing = LinearEasing
     )
 
     Box(

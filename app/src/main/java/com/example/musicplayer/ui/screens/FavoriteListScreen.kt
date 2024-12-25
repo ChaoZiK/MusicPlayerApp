@@ -9,13 +9,15 @@ import com.example.musicplayer.data.Playlist
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
 import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
+import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 
 @Composable
 fun FavoriteListScreen(
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
     onSongClick: (FavoriteSong) -> Unit,
-    viewModel: FavoriteListViewModel = hiltViewModel()
+    viewModel: FavoriteListViewModel = hiltViewModel(),
+    miniPlayerViewModel: MiniPlayerViewModel
 ) {
     val favoriteSongs by viewModel.favoriteSongs.observeAsState(emptyList())
     val playlist = Playlist(
@@ -35,7 +37,8 @@ fun FavoriteListScreen(
         },
         onSortSelected = { _, _ -> /* Handle sort, if needed */ },
         onShuffleClick = { /* Handle shuffle */ },
-        onPlayClick = { /* Handle play */ }
+        onPlayClick = { /* Handle play */ },
+        miniPlayerViewModel = miniPlayerViewModel
     )
 }
 
