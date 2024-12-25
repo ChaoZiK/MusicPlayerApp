@@ -109,7 +109,8 @@ private fun MusicNavGraph(
                         navController.navigate(Destinations.SEARCH)
                     },
                     onSongClick = { song -> miniPlayerViewModel.updateSong(song) },
-                    onSortSelected = { option, direction -> /* Handle sort */ }
+                    onSortSelected = { option, direction -> /* Handle sort */ },
+                    miniPlayerViewModel = miniPlayerViewModel
                 )
             }
         }
