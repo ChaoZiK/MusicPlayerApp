@@ -118,7 +118,6 @@ fun HomeScreen(
                         } else {
                             Log.e("HomeScreen", "Invalid song data: $song")
                         }
-
                     },
                     onSortSelected = { option, direction ->
                         // Handle sort

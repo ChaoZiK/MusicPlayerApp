@@ -142,10 +142,6 @@ fun FullPlayerScreen(
                     artist = artist
                 )
 
-                currentSong?.let { song ->
-                    Log.d("FullPlayerScreen", "Current Song: ${song.title}")
-                }
-
                 ActionButtons(
                     modifier = Modifier.constrainAs(actions) {
                         bottom.linkTo(controls.top, margin = 16.dp)

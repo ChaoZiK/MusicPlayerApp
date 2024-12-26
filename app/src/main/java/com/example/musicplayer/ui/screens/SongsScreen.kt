@@ -34,6 +34,7 @@ fun SongsScreen(
             if (index != -1) {
                 fullPlayerViewModel.playSongByIndex(index)
             }
+            onSongClick(song)
         },
         onShuffleClick = { homeViewModel.shuffleAndPlay() },
         onPlayClick = { homeViewModel.playFirstSong() }
