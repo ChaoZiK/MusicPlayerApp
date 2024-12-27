@@ -109,7 +109,6 @@ fun HomeScreen(
                     songs = songs,
                     onSongClick = { song ->
                         if (song.id.isNotEmpty() && song.path.isNotEmpty()) {
-                            miniPlayerViewModel.updateSong(song)
                             coroutineScope.launch {
                                 recentlyPlayedViewModel.addRecentlyPlayed(
                                     song.toRecentlyPlayedSong(System.currentTimeMillis())

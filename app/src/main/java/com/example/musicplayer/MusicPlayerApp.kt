@@ -41,6 +41,7 @@ import com.example.musicplayer.ui.screens.PlaylistDetailScreen
 import com.example.musicplayer.ui.screens.RecentlyPlayedListScreen
 import com.example.musicplayer.ui.screens.SearchScreen
 import com.example.musicplayer.ui.theme.Dimensions
+import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
@@ -61,6 +62,7 @@ private fun MusicNavGraph(
     navController: NavHostController,
     viewModel: SearchViewModel,
     miniPlayerViewModel: MiniPlayerViewModel,
+    fullPlayerViewModel: FullPlayerViewModel,
     onOpenDrawer: () -> Unit
 ) {
     NavHost(
@@ -158,7 +160,9 @@ private fun MusicNavGraph(
                     viewModel.activateSearch()
                     navController.navigate(Destinations.SEARCH)
                 },
-                miniPlayerViewModel = miniPlayerViewModel
+                miniPlayerViewModel = miniPlayerViewModel,
+                fullPlayerViewModel = fullPlayerViewModel,
+                coroutineScope = rememberCoroutineScope()
             )
         }
 
@@ -176,7 +180,9 @@ private fun MusicNavGraph(
                 onSongClick = { song ->
                     navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
                 },
-                miniPlayerViewModel = miniPlayerViewModel
+                miniPlayerViewModel = miniPlayerViewModel,
+                fullPlayerViewModel = fullPlayerViewModel,
+                coroutineScope = rememberCoroutineScope()
             )
         }
 
@@ -189,12 +195,13 @@ fun MusicPlayerApp() {
     val currentEntry by navController.currentBackStackEntryAsState()
     val viewModel: SearchViewModel = hiltViewModel()
     val miniPlayerViewModel: MiniPlayerViewModel = hiltViewModel()
+    val fullPlayerViewModel: FullPlayerViewModel = hiltViewModel()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showExitDialog by remember { mutableStateOf(false) }
 
     val showMiniPlayer = currentEntry?.destination?.route?.let { route ->
-        (route == Destinations.HOME || route.startsWith("playlist/")) &&
+        (route == Destinations.HOME || route == Destinations.RECENTLY_PLAYED || route == Destinations.FAVORITES || route.startsWith("playlist/")) &&
                 miniPlayerViewModel.currentSong.collectAsState().value != null
     } ?: false
 
@@ -222,6 +229,7 @@ fun MusicPlayerApp() {
                 navController = navController,
                 viewModel = viewModel,
                 miniPlayerViewModel = miniPlayerViewModel,
+                fullPlayerViewModel = fullPlayerViewModel,
                 onOpenDrawer = { scope.launch { drawerState.open() } }
             )
 

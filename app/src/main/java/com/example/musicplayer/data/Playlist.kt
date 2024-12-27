@@ -24,7 +24,13 @@ data class Playlist(
 val defaultPlaylists = listOf(
     Playlist(
         id = "recent",
-        title = "Recently played",
+        title = "Recently played songs",
+        songs = listOf(),
+        isDefault = true
+    ),
+    Playlist(
+        id = "favorite",
+        title = "My favorite songs",
         songs = listOf(),
         isDefault = true
     )

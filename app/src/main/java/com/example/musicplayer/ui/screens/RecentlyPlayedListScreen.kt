@@ -7,8 +7,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.musicplayer.data.RecentlyPlayedSong
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
+import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun RecentlyPlayedListScreen(
@@ -16,7 +19,9 @@ fun RecentlyPlayedListScreen(
     onSearchClick: () -> Unit,
     onSongClick: (RecentlyPlayedSong) -> Unit,
     viewModel: RecentlyPlayedViewModel = hiltViewModel(),
-    miniPlayerViewModel: MiniPlayerViewModel
+    miniPlayerViewModel: MiniPlayerViewModel,
+    fullPlayerViewModel: FullPlayerViewModel,
+    coroutineScope: CoroutineScope
 ) {
     val recentlyPlayedSongs by viewModel.recentlyPlayedSongs.observeAsState(emptyList())
 
@@ -26,7 +31,16 @@ fun RecentlyPlayedListScreen(
         onBackPressed = onBackClick,
         onSearchClick = onSearchClick,
         onSongClick = { song ->
-            recentlyPlayedSongs.find { it.songId == song.id }?.let(onSongClick)
+            coroutineScope.launch {
+                // Update the playlist in PlayerRepository
+                fullPlayerViewModel.updatePlaylist(recentlyPlayedSongs.map { it.toSong() })
+
+                // Play the selected song
+                val index = recentlyPlayedSongs.indexOfFirst { it.songId == song.id }
+                if (index != -1) {
+                    fullPlayerViewModel.playSongByIndex(index)
+                }
+            }
         },
         miniPlayerViewModel = miniPlayerViewModel
     )

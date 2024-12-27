@@ -9,7 +9,10 @@ import com.example.musicplayer.data.Playlist
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
 import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
+import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun FavoriteListScreen(
@@ -17,23 +20,28 @@ fun FavoriteListScreen(
     onSearchClick: () -> Unit,
     onSongClick: (FavoriteSong) -> Unit,
     viewModel: FavoriteListViewModel = hiltViewModel(),
-    miniPlayerViewModel: MiniPlayerViewModel
+    miniPlayerViewModel: MiniPlayerViewModel,
+    fullPlayerViewModel: FullPlayerViewModel,
+    coroutineScope: CoroutineScope
 ) {
     val favoriteSongs by viewModel.favoriteSongs.observeAsState(emptyList())
-    val playlist = Playlist(
-        id = "favorites",
-        title = "Favorites",
-        songs = favoriteSongs.map { it.toSong() }
-    )
 
     SongsContentLayout(
-        songs = playlist.songs,
+        songs = favoriteSongs.map { it.toSong() },
         showTopBar = true,
-        topBarTitle = playlist.title,
         onBackPressed = onBackClick,
         onSearchClick = onSearchClick,
         onSongClick = { song ->
-            favoriteSongs.find { it.songId == song.id }?.let(onSongClick)
+            coroutineScope.launch {
+                // Update the playlist in PlayerRepository
+                fullPlayerViewModel.updatePlaylist(favoriteSongs.map { it.toSong() })
+
+                // Play the selected song
+                val index = favoriteSongs.indexOfFirst { it.songId == song.id }
+                if (index != -1) {
+                    fullPlayerViewModel.playSongByIndex(index)
+                }
+            }
         },
         onSortSelected = { _, _ -> /* Handle sort, if needed */ },
         onShuffleClick = { /* Handle shuffle */ },

@@ -1,20 +1,24 @@
 package com.example.musicplayer.data
 
-
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "favorites_table")
 data class FavoriteSong(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val songId: String,
-    val title: String,
-    val artist: String,
-    val albumName: String,
-    val duration: String,
-    val coverImageUrl: String,
-    val addedTimestamp: Long,
-    val path: String
+    val songId: String = "",
+    val title: String = "",
+    val artist: String = "",
+    val album: String = "",
+    val genre: String? = null,
+    val duration: String = "0:00",
+    val size: String = "0 MB",
+    val path: String = "",
+    val artUri: String = "",
+    val year: Int? = null,
+    val trackNumber: Int? = null,
+    val composer: String? = null,
+    val addedTimestamp: Long
 )
 
 fun FavoriteSong.toSong(): Song {
@@ -22,11 +26,11 @@ fun FavoriteSong.toSong(): Song {
         id = this.songId,
         title = this.title,
         artist = this.artist,
-        album = this.albumName,
+        album = this.album,
         duration = this.duration,
-        artUri = this.coverImageUrl,
-        path = "",
-        size = "",
+        artUri = this.artUri,
+        path = this.path,
+        size = this.size,
         genre = null,
         year = null,
         trackNumber = null,
@@ -39,11 +43,15 @@ fun Song.toFavoriteSong(timestamp: Long): FavoriteSong {
         songId = this.id,
         title = this.title,
         artist = this.artist,
-        albumName = "", // Update if album data exists
+        album = this.album,
         duration = this.duration,
-        coverImageUrl = this.artUri,
+        artUri = this.artUri,
         addedTimestamp = timestamp,
-        path = this.path
+        path = this.path,
+        size = this.size,
+        genre = null,
+        year = null,
+        trackNumber = null,
+        composer = null
     )
 }
-
