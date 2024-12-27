@@ -153,14 +153,12 @@ class FullPlayerViewModel @Inject constructor(
     }
 
     fun shuffleAndPlay() {
-        playerRepository.stopPlayback()
         playerRepository.shuffle()
-        playerRepository.togglePlayPause()
+        playerRepository.playOrShuffle()
     }
 
     fun playFirstSong() {
-        playerRepository.stopPlayback()
         playerRepository.playFirstSong()
-        playerRepository.togglePlayPause()
+        playerRepository.playOrShuffle()
     }
 }

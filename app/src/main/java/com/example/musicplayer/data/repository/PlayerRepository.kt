@@ -93,7 +93,16 @@ class PlayerRepository @Inject constructor(
 
   fun shuffle() {
     if (_playlist.value.isNotEmpty()) {
-      val randomIndex = (0 until _playlist.value.size).random()
+      val playlistSize = _playlist.value.size
+
+      if (playlistSize <= 1) {
+        return
+      }
+
+      val currentIndex = _playlist.value.indexOf(_currentSong.value)
+      val randomIndex = (0 until playlistSize)
+        .filter { it != currentIndex }
+        .random()
       updateSongByIndex(randomIndex)
       musicController.playSong(_playlist.value[randomIndex])
       _isPlaying.value = false
@@ -102,9 +111,23 @@ class PlayerRepository @Inject constructor(
 
   fun playFirstSong() {
     if (_playlist.value.isNotEmpty()) {
+      val firstSong = _playlist.value[0]
+      // Check if the first song is already playing
+      if (_currentSong.value == firstSong && _isPlaying.value) {
+        Log.d("PlayerRepository", "First song is already playing. No action taken.")
+        return
+      }
       updateSongByIndex(0)
-      musicController.playSong(_playlist.value[0])
+      musicController.playSong(firstSong)
       _isPlaying.value = false
+    }
+  }
+
+  fun playOrShuffle() {
+    if (_isPlaying.value) {
+      musicController.continuePlaying()
+    } else {
+      togglePlayPause()
     }
   }
 
