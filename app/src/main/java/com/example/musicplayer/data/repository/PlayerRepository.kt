@@ -3,6 +3,7 @@ package com.example.musicplayer.data.repository
 import android.util.Log
 import com.example.musicplayer.backend.MusicController
 import android.net.Uri
+import com.example.musicplayer.data.FavoriteDAO
 import com.example.musicplayer.data.Song
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 
 @Singleton
 class PlayerRepository @Inject constructor(
-  private val musicController: MusicController
+  private val musicController: MusicController,
+  private val favoriteDAO: FavoriteDAO
 ) {
   private val scope = CoroutineScope(Dispatchers.Default)
 
@@ -82,6 +84,11 @@ class PlayerRepository @Inject constructor(
     _artUri.value = song.artUri
     resetProgress()
     _isPlaying.value = false
+
+    CoroutineScope(Dispatchers.IO).launch {
+      val isFavoriteSong = favoriteDAO.getFavoriteBySongId(song.id) != null
+      _isFavorite.value = isFavoriteSong
+    }
   }
 
   fun shuffle() {
