@@ -42,6 +42,19 @@ fun RecentlyPlayedListScreen(
                 }
             }
         },
+        onSortSelected = { _, _ -> /* Handle sort, if needed */ },
+        onShuffleClick = {
+            coroutineScope.launch {
+                fullPlayerViewModel.updatePlaylist(recentlyPlayedSongs.map { it.toSong() })
+                fullPlayerViewModel.shuffleAndPlay()
+            }
+        },
+        onPlayClick = {
+            coroutineScope.launch {
+                fullPlayerViewModel.updatePlaylist(recentlyPlayedSongs.map { it.toSong() })
+                fullPlayerViewModel.playFirstSong()
+            }
+        },
         miniPlayerViewModel = miniPlayerViewModel
     )
 }

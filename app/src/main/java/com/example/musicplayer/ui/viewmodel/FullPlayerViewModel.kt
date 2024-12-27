@@ -151,4 +151,16 @@ class FullPlayerViewModel @Inject constructor(
     fun updateProgress(progress: Float) {
         playerRepository.updateProgress(progress)
     }
+
+    fun shuffleAndPlay() {
+        playerRepository.stopPlayback()
+        playerRepository.shuffle()
+        playerRepository.togglePlayPause()
+    }
+
+    fun playFirstSong() {
+        playerRepository.stopPlayback()
+        playerRepository.playFirstSong()
+        playerRepository.togglePlayPause()
+    }
 }

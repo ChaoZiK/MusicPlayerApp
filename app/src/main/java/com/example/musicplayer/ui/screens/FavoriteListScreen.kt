@@ -44,8 +44,18 @@ fun FavoriteListScreen(
             }
         },
         onSortSelected = { _, _ -> /* Handle sort, if needed */ },
-        onShuffleClick = { /* Handle shuffle */ },
-        onPlayClick = { /* Handle play */ },
+        onShuffleClick = {
+            coroutineScope.launch {
+                fullPlayerViewModel.updatePlaylist(favoriteSongs.map { it.toSong() })
+                fullPlayerViewModel.shuffleAndPlay()
+            }
+        },
+        onPlayClick = {
+            coroutineScope.launch {
+                fullPlayerViewModel.updatePlaylist(favoriteSongs.map { it.toSong() })
+                fullPlayerViewModel.playFirstSong()
+            }
+        },
         miniPlayerViewModel = miniPlayerViewModel
     )
 }
