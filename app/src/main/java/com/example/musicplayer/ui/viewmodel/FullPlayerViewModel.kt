@@ -5,15 +5,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.musicplayer.backend.MusicController
-import com.example.musicplayer.data.Song
+import androidx.lifecycle.viewModelScope
+import com.example.musicplayer.data.FavoriteDAO
 import com.example.musicplayer.data.repository.PlayerRepository
+import com.example.musicplayer.data.Song
+import com.example.musicplayer.data.toFavoritesSong
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FullPlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
-    private val musicController: MusicController // Inject MusicController
+    private val musicController: MusicController, // Inject MusicController
+    private val favoriteDAO: FavoriteDAO
 ) : ViewModel() {
 
     val isPlaying = playerRepository.isPlaying
@@ -63,12 +70,34 @@ class FullPlayerViewModel @Inject constructor(
         }
     }
 
+    fun updateSong(song: Song) {
+        playerRepository.updateSong(song)
+        viewModelScope.launch {
+            val isFavoriteSong = favoriteDAO.getFavoriteBySongId(song.id)
+            playerRepository.toggleFavorite(song)
+        }
+    }
 
 
     fun togglePlayPause() {
         playerRepository.togglePlayPause()
     }
 
+    fun toggleFavorite() {
+        val song = currentSong.value ?: return
+        viewModelScope.launch {
+            val favorite = favoriteDAO.getFavoriteBySongId(song.id)
+            if (favorite == null) {
+                // Add the song to the favorites list
+                favoriteDAO.insertFavorite(song.toFavoritesSong(System.currentTimeMillis()))
+                playerRepository.toggleFavorite(song)
+            } else {
+                // Remove the song from the favorites list
+                favoriteDAO.deleteFavorite(favorite)
+                playerRepository.toggleFavorite(song)
+            }
+        }
+    }
     fun playNext() {
         val nextSong = playerRepository.nextSong()
         if (nextSong == null) {
@@ -81,7 +110,6 @@ class FullPlayerViewModel @Inject constructor(
         musicController.playSong(nextSong) // Play the next song
         playerRepository.togglePlayPause() // Start progress updates
     }
-
 
     fun playPrevious() {
         val previousSong = playerRepository.previousSong()
@@ -124,7 +152,13 @@ class FullPlayerViewModel @Inject constructor(
         playerRepository.updateProgress(progress)
     }
 
-    fun toggleFavorite() {
-        playerRepository.toggleFavorite(currentSong.value)
+    fun shuffleAndPlay() {
+        playerRepository.shuffle()
+        playerRepository.playOrShuffle()
+    }
+
+    fun playFirstSong() {
+        playerRepository.playFirstSong()
+        playerRepository.playOrShuffle()
     }
 }

@@ -1,6 +1,7 @@
 package com.example.musicplayer.data
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -29,7 +30,7 @@ abstract class FavoritesDatabase : RoomDatabase() {
     }
   }
 }*/
-@Database(entities = [FavoriteSong::class], version = 1, exportSchema = false)
+@Database(entities = [FavoriteSong::class], version = 3, exportSchema = false)
 abstract class FavoriteDatabase : RoomDatabase() {
   abstract fun favoritesDAO(): FavoriteDAO
 
@@ -38,6 +39,7 @@ abstract class FavoriteDatabase : RoomDatabase() {
     private var INSTANCE: FavoriteDatabase? = null
 
     fun getDatabase(context: Context): FavoriteDatabase {
+      Log.d("FavoriteDatabase", "Initializing FavoriteDatabase...")
       return INSTANCE ?: synchronized(this) {
         val instance = Room.databaseBuilder(
           context.applicationContext,

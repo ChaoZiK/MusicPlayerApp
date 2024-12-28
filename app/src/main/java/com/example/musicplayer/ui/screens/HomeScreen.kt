@@ -31,8 +31,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import com.example.musicplayer.backend.AudioFetcher
 import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
-
+import com.example.musicplayer.data.toRecentlyPlayedSong
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
+import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -41,17 +43,21 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     miniPlayerViewModel: MiniPlayerViewModel,
     onMenuClick: () -> Unit,
-    fullPlayerViewModel: FullPlayerViewModel = hiltViewModel()
+    fullPlayerViewModel: FullPlayerViewModel = hiltViewModel(),
+    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel()
 ) {
     val selectedTab by viewModel.selectedTab.collectAsState()
     val audioViewModel: AudioViewModel = viewModel()
     val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     // Request permissions and fetch songs
     LaunchedEffect(Unit) {
         requestAudioPermission(context) { granted ->
             if (granted) {
+                val fetchedSongs = AudioFetcher(context).fetchAudioFiles()
+                Log.d("HomeScreen", "Fetched songs: $fetchedSongs")
                 audioViewModel.fetchSongs()
             } else {
                 Toast.makeText(context, "Permission denied to access audio files", Toast.LENGTH_SHORT).show()
@@ -101,6 +107,17 @@ fun HomeScreen(
                 0 -> SongsScreen(
                     // Replace 'sampleSongs' to 'songs' to use music from your device
                     songs = songs,
+                    onSongClick = { song ->
+                        if (song.id.isNotEmpty() && song.path.isNotEmpty()) {
+                            coroutineScope.launch {
+                                recentlyPlayedViewModel.addRecentlyPlayed(
+                                    song.toRecentlyPlayedSong(System.currentTimeMillis())
+                                )
+                            }
+                        } else {
+                            Log.e("HomeScreen", "Invalid song data: $song")
+                        }
+                    },
                     onSortSelected = { option, direction ->
                         // Handle sort
                     },

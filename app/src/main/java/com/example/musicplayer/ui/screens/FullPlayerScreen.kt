@@ -149,7 +149,10 @@ fun FullPlayerScreen(
                         width = Dimension.fillToConstraints
                     },
                     isFavorite = isFavorite,
-                    onFavoriteClick = { viewModel.toggleFavorite() },
+                    onFavoriteClick = {
+                        Log.d("FullPlayerScreen", "Favorite button clicked")
+                        viewModel.toggleFavorite()
+                    },
                     onShareClick = {
                         currentSong?.let { song ->
                             shareAudioFile(

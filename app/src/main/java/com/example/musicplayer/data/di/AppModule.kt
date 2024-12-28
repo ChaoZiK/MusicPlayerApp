@@ -3,6 +3,7 @@ package com.example.musicplayer.data.di
 import android.app.Application
 import android.content.Context
 import com.example.musicplayer.backend.MusicController
+import com.example.musicplayer.data.FavoriteDAO
 import com.example.musicplayer.data.repository.PlayerRepository
 import dagger.Module
 import dagger.Provides
@@ -34,9 +35,10 @@ object AppModule {
     @Provides
     @Singleton
     fun providePlayerRepository(
-        musicController: MusicController
+        musicController: MusicController,
+        favoriteDAO: FavoriteDAO
     ): PlayerRepository {
-        return PlayerRepository(musicController)
+        return PlayerRepository(musicController, favoriteDAO)
     }
 }
 

@@ -14,6 +14,7 @@ import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 @Composable
 fun SongsScreen(
     songs: List<Song>,
+    onSongClick: (Song) -> Unit,
     miniPlayerViewModel: MiniPlayerViewModel,
     onSortSelected: (SortOption, SortDirection) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
@@ -33,6 +34,7 @@ fun SongsScreen(
             if (index != -1) {
                 fullPlayerViewModel.playSongByIndex(index)
             }
+            onSongClick(song)
         },
         onShuffleClick = { homeViewModel.shuffleAndPlay() },
         onPlayClick = { homeViewModel.playFirstSong() }

@@ -68,6 +68,7 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
 
     //val lifecycle_version = "2.8.7"
     //val arch_version = "2.2.0"

@@ -32,13 +32,16 @@ import com.example.musicplayer.ui.animations.Transitions
 import com.example.musicplayer.ui.components.dialogs.ExitDialog
 import com.example.musicplayer.ui.components.menu.DrawerContent
 import com.example.musicplayer.ui.components.player.MiniPlayer
+import com.example.musicplayer.ui.screens.FavoriteListScreen
 import com.example.musicplayer.ui.screens.FeedbackScreen
 import com.example.musicplayer.ui.screens.FullPlayerScreen
 import com.example.musicplayer.ui.screens.HomeScreen
 import com.example.musicplayer.ui.screens.InformationScreen
 import com.example.musicplayer.ui.screens.PlaylistDetailScreen
+import com.example.musicplayer.ui.screens.RecentlyPlayedListScreen
 import com.example.musicplayer.ui.screens.SearchScreen
 import com.example.musicplayer.ui.theme.Dimensions
+import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
@@ -50,6 +53,8 @@ private object Destinations {
     const val FULL_PLAYER = "full_player"
     const val INFORMATION = "information"
     const val FEEDBACK = "feedback"
+    const val FAVORITES = "favorites"
+    const val RECENTLY_PLAYED = "recently_played"
 }
 
 @Composable
@@ -57,6 +62,7 @@ private fun MusicNavGraph(
     navController: NavHostController,
     viewModel: SearchViewModel,
     miniPlayerViewModel: MiniPlayerViewModel,
+    fullPlayerViewModel: FullPlayerViewModel,
     onOpenDrawer: () -> Unit
 ) {
     NavHost(
@@ -138,6 +144,48 @@ private fun MusicNavGraph(
         ) {
             FeedbackScreen(onBackClick = { navController.navigateUp() })
         }
+
+
+        composable(
+            route = Destinations.FAVORITES,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            FavoriteListScreen(
+                onSongClick = { song ->
+                    navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
+                },
+                onBackClick = { navController.navigateUp() },
+                onSearchClick = {
+                    viewModel.activateSearch()
+                    navController.navigate(Destinations.SEARCH)
+                },
+                miniPlayerViewModel = miniPlayerViewModel,
+                fullPlayerViewModel = fullPlayerViewModel,
+                coroutineScope = rememberCoroutineScope()
+            )
+        }
+
+        composable(
+            route = Destinations.RECENTLY_PLAYED,
+            enterTransition = Transitions.Navigation.defaultEnter,
+            exitTransition = Transitions.Navigation.defaultExit
+        ) {
+            RecentlyPlayedListScreen(
+                onBackClick = { navController.navigateUp() },
+                onSearchClick = {
+                    viewModel.activateSearch()
+                    navController.navigate(Destinations.SEARCH)
+                },
+                onSongClick = { song ->
+                    navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
+                },
+                miniPlayerViewModel = miniPlayerViewModel,
+                fullPlayerViewModel = fullPlayerViewModel,
+                coroutineScope = rememberCoroutineScope()
+            )
+        }
+
     }
 }
 
@@ -147,12 +195,13 @@ fun MusicPlayerApp() {
     val currentEntry by navController.currentBackStackEntryAsState()
     val viewModel: SearchViewModel = hiltViewModel()
     val miniPlayerViewModel: MiniPlayerViewModel = hiltViewModel()
+    val fullPlayerViewModel: FullPlayerViewModel = hiltViewModel()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var showExitDialog by remember { mutableStateOf(false) }
 
     val showMiniPlayer = currentEntry?.destination?.route?.let { route ->
-        (route == Destinations.HOME || route.startsWith("playlist/")) &&
+        (route == Destinations.HOME || route == Destinations.RECENTLY_PLAYED || route == Destinations.FAVORITES || route.startsWith("playlist/")) &&
                 miniPlayerViewModel.currentSong.collectAsState().value != null
     } ?: false
 
@@ -180,6 +229,7 @@ fun MusicPlayerApp() {
                 navController = navController,
                 viewModel = viewModel,
                 miniPlayerViewModel = miniPlayerViewModel,
+                fullPlayerViewModel = fullPlayerViewModel,
                 onOpenDrawer = { scope.launch { drawerState.open() } }
             )
 

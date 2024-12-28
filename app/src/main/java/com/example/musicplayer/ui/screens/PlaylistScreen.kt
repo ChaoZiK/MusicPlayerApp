@@ -5,26 +5,53 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.musicplayer.data.Playlist
 import com.example.musicplayer.data.customPlaylists
 import com.example.musicplayer.data.defaultPlaylists
+import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.playlist.AddPlaylistDialog
 import com.example.musicplayer.ui.components.playlist.PlaylistHeader
 import com.example.musicplayer.ui.components.playlist.PlaylistItem
 import com.example.musicplayer.ui.components.sheets.CustomPlaylistOptionsSheet
 import com.example.musicplayer.ui.components.sheets.DefaultPlaylistOptionsSheet
+import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
+import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistScreen(
-    navController: NavController
+    navController: NavController,
+    favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
+    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel()
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var showOptions by remember { mutableStateOf(false) }
     var selectedPlaylist by remember { mutableStateOf<Playlist?>(null) }
+    val favoriteSongs by favoriteListViewModel.favoriteSongs.observeAsState(emptyList())
+    val recentlyPlayedSongs by recentlyPlayedViewModel.recentlyPlayedSongs.observeAsState(emptyList())
+
+    val favoriteSongsAsSongs = favoriteSongs.map { it.toSong() }
+    val recentlyPlayedSongsAsSongs = recentlyPlayedSongs.map { it.toSong() }
+
+    val favoritePlaylist = Playlist(
+        id = "favorite",
+        title = "My favorite songs",
+        songs = favoriteSongsAsSongs,
+        isDefault = true,
+        coverImage = null
+    )
+    val recentlyPlayedPlaylist = Playlist(
+        id = "recent",
+        title = "Recently played songs",
+        songs = recentlyPlayedSongsAsSongs,
+        isDefault = true,
+        coverImage = null
+    )
 
     Box(
         modifier = Modifier
@@ -40,15 +67,45 @@ fun PlaylistScreen(
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                items(defaultPlaylists.size) { index ->
-                    val playlist = defaultPlaylists[index]
+//                // Show Recent playlist
+//                items(defaultPlaylists.size) { index ->
+//                    val playlist = defaultPlaylists[index]
+//                    PlaylistItem(
+//                        playlist = playlist,
+//                        onPlaylistClick = {
+//                            navController.navigate("playlist/${playlist.id}")
+//                        },
+//                        onMoreClick = {
+//                            selectedPlaylist = playlist
+//                            showOptions = true
+//                        }
+//                    )
+//                }
+
+                // Add Recently Played item
+                item {
                     PlaylistItem(
-                        playlist = playlist,
+                        playlist = recentlyPlayedPlaylist,
+                        modifier = Modifier.padding(bottom = 8.dp),
                         onPlaylistClick = {
-                            navController.navigate("playlist/${playlist.id}")
+                            navController.navigate("recently_played")
                         },
                         onMoreClick = {
-                            selectedPlaylist = playlist
+                            selectedPlaylist = recentlyPlayedPlaylist
+                            showOptions = true
+                        }
+                    )
+                }
+
+                item {
+                    PlaylistItem(
+                        playlist = favoritePlaylist,
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        onPlaylistClick = {
+                            navController.navigate("favorites")
+                        },
+                        onMoreClick = {
+                            selectedPlaylist = favoritePlaylist
                             showOptions = true
                         }
                     )
