@@ -12,6 +12,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -28,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.musicplayer.data.customPlaylists
 import com.example.musicplayer.data.defaultPlaylists
+import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.animations.Transitions
 import com.example.musicplayer.ui.components.dialogs.ExitDialog
 import com.example.musicplayer.ui.components.menu.DrawerContent
@@ -41,8 +43,11 @@ import com.example.musicplayer.ui.screens.PlaylistDetailScreen
 import com.example.musicplayer.ui.screens.RecentlyPlayedListScreen
 import com.example.musicplayer.ui.screens.SearchScreen
 import com.example.musicplayer.ui.theme.Dimensions
+import com.example.musicplayer.ui.viewmodel.AudioViewModel
+import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
 import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
+import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
 import com.example.musicplayer.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
 
@@ -75,9 +80,11 @@ private fun MusicNavGraph(
             enterTransition = Transitions.Navigation.defaultEnter,
             exitTransition = Transitions.Navigation.defaultExit
         ) {
+            val audioViewModel: AudioViewModel = hiltViewModel()
+            val songs by audioViewModel.songs.observeAsState(emptyList())
             HomeScreen(
                 onSearchClick = {
-                    viewModel.activateSearch()
+                    viewModel.activateSearch(songs)
                     navController.navigate(Destinations.SEARCH)
                 },
                 navController = navController,
@@ -93,33 +100,36 @@ private fun MusicNavGraph(
         ) {
             SearchScreen(
                 viewModel = viewModel,
-                onBackPressed = { navController.navigateUp() }
+                onBackPressed = { navController.navigateUp() },
+                onSongClick = { song ->
+                    //fullPlayerViewModel.playSongByIndex(song.id) // Update with correct playback logic
+                }
             )
         }
 
-        composable(
-            route = Destinations.PLAYLIST,
-            arguments = listOf(navArgument("playlistId") { type = NavType.StringType }),
-            enterTransition = Transitions.Navigation.defaultEnter,
-            exitTransition = Transitions.Navigation.defaultExit
-        ) { backStackEntry ->
-            val playlistId = backStackEntry.arguments?.getString("playlistId")
-            val playlist = (defaultPlaylists + customPlaylists).find { it.id == playlistId }
-
-            playlist?.let {
-                PlaylistDetailScreen(
-                    playlist = it,
-                    onBackPressed = { navController.navigateUp() },
-                    onSearchClick = {
-                        viewModel.activateSearch()
-                        navController.navigate(Destinations.SEARCH)
-                    },
-                    onSongClick = { song -> miniPlayerViewModel.updateSong(song) },
-                    onSortSelected = { option, direction -> /* Handle sort */ },
-                    miniPlayerViewModel = miniPlayerViewModel
-                )
-            }
-        }
+//        composable(
+//            route = Destinations.PLAYLIST,
+//            arguments = listOf(navArgument("playlistId") { type = NavType.StringType }),
+//            enterTransition = Transitions.Navigation.defaultEnter,
+//            exitTransition = Transitions.Navigation.defaultExit
+//        ) { backStackEntry ->
+//            val playlistId = backStackEntry.arguments?.getString("playlistId")
+//            val playlist = (defaultPlaylists + customPlaylists).find { it.id == playlistId }
+//
+//            playlist?.let {
+//                PlaylistDetailScreen(
+//                    playlist = it,
+//                    onBackPressed = { navController.navigateUp() },
+//                    onSearchClick = {
+//                        viewModel.activateSearch()
+//                        navController.navigate(Destinations.SEARCH)
+//                    },
+//                    onSongClick = { song -> miniPlayerViewModel.updateSong(song) },
+//                    onSortSelected = { option, direction -> /* Handle sort */ },
+//                    miniPlayerViewModel = miniPlayerViewModel
+//                )
+//            }
+//        }
 
         composable(
             route = Destinations.FULL_PLAYER,
@@ -151,13 +161,16 @@ private fun MusicNavGraph(
             enterTransition = Transitions.Navigation.defaultEnter,
             exitTransition = Transitions.Navigation.defaultExit
         ) {
+            val favoriteViewModel: FavoriteListViewModel = hiltViewModel()
+            val favoriteSongs by favoriteViewModel.favoriteSongs.observeAsState(emptyList())
+
             FavoriteListScreen(
                 onSongClick = { song ->
                     navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
                 },
                 onBackClick = { navController.navigateUp() },
                 onSearchClick = {
-                    viewModel.activateSearch()
+                    viewModel.activateSearch(favoriteSongs.map { it.toSong() })
                     navController.navigate(Destinations.SEARCH)
                 },
                 miniPlayerViewModel = miniPlayerViewModel,
@@ -171,10 +184,13 @@ private fun MusicNavGraph(
             enterTransition = Transitions.Navigation.defaultEnter,
             exitTransition = Transitions.Navigation.defaultExit
         ) {
+            val recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel()
+            val recentlyPlayedSongs by recentlyPlayedViewModel.recentlyPlayedSongs.observeAsState(emptyList())
+
             RecentlyPlayedListScreen(
                 onBackClick = { navController.navigateUp() },
                 onSearchClick = {
-                    viewModel.activateSearch()
+                    viewModel.activateSearch(recentlyPlayedSongs.map { it.toSong() })
                     navController.navigate(Destinations.SEARCH)
                 },
                 onSongClick = { song ->

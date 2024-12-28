@@ -35,6 +35,7 @@ import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.data.toRecentlyPlayedSong
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
+import com.example.musicplayer.ui.viewmodel.SearchViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -52,6 +53,7 @@ fun HomeScreen(
     val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val searchViewModel: SearchViewModel = hiltViewModel()
 
     // Request permissions and fetch songs
     LaunchedEffect(Unit) {
@@ -87,7 +89,10 @@ fun HomeScreen(
             ) {
                 HomeTopBar(
                     onMenuClick = onMenuClick,
-                    onSearchClick = onSearchClick
+                    onSearchClick = {
+                        searchViewModel.activateSearch(songs)
+                        onSearchClick()
+                    }
                 )
                 TabNav(
                     selectedTab = selectedTab,
