@@ -5,7 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.musicplayer.backend.AudioFetcher
+import com.example.musicplayer.backend.sortSongs
+import com.example.musicplayer.data.AlphabeticDirection
 import com.example.musicplayer.data.Song
+import com.example.musicplayer.data.SortDirection
+import com.example.musicplayer.data.SortOption
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,6 +20,9 @@ class AudioViewModel(application: Application) : AndroidViewModel(application) {
 
     private val audioFetcher = AudioFetcher(application)
 
+    private var currentSortOption: SortOption = SortOption.SONG_NAME
+    private var currentSortDirection: SortDirection = AlphabeticDirection.AToZ
+
     fun fetchSongs() {
         CoroutineScope(Dispatchers.IO).launch {
             val fetchedSongs = audioFetcher.fetchAudioFiles()
@@ -24,6 +31,18 @@ class AudioViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateSongs(fetchedSongs: List<Song>) {
-        _songs.postValue(fetchedSongs)
+        val sortedSongs = sortSongs(fetchedSongs, currentSortOption, currentSortDirection)
+        _songs.postValue(sortedSongs)
+    }
+
+    fun updateSort(option: SortOption, direction: SortDirection) {
+        currentSortOption = option
+        currentSortDirection = direction
+
+        // Reapply sorting to the current song list
+        _songs.value?.let { unsortedSongs ->
+            val sortedSongs = sortSongs(unsortedSongs, option, direction)
+            _songs.postValue(sortedSongs)
+        }
     }
 }

@@ -3,8 +3,13 @@ package com.example.musicplayer.ui.screens
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.musicplayer.backend.sortSongs
 import com.example.musicplayer.data.RecentlyPlayedSong
+import com.example.musicplayer.data.toRecentlyPlayedSong
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
 import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
@@ -24,6 +29,7 @@ fun RecentlyPlayedListScreen(
     coroutineScope: CoroutineScope
 ) {
     val recentlyPlayedSongs by viewModel.recentlyPlayedSongs.observeAsState(emptyList())
+    var sortedSongs by remember { mutableStateOf(recentlyPlayedSongs.map { it.toSong() }) }
 
     SongsContentLayout(
         songs = recentlyPlayedSongs.map { it.toSong() },
@@ -42,7 +48,10 @@ fun RecentlyPlayedListScreen(
                 }
             }
         },
-        onSortSelected = { _, _ -> /* Handle sort, if needed */ },
+        onSortSelected = { option, direction ->
+            val sortedSongs = sortSongs(recentlyPlayedSongs.map { it.toSong() }, option, direction)
+            viewModel.updateRecentlyPlayedSongs(sortedSongs.map { it.toRecentlyPlayedSong(System.currentTimeMillis()) })
+        },
         onShuffleClick = {
             coroutineScope.launch {
                 fullPlayerViewModel.updatePlaylist(recentlyPlayedSongs.map { it.toSong() })

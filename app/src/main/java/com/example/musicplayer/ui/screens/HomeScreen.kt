@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import com.example.musicplayer.backend.AudioFetcher
+import com.example.musicplayer.backend.sortSongs
 import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.data.toRecentlyPlayedSong
 import com.example.musicplayer.ui.viewmodel.MiniPlayerViewModel
@@ -119,7 +120,7 @@ fun HomeScreen(
                         }
                     },
                     onSortSelected = { option, direction ->
-                        // Handle sort
+                        audioViewModel.updateSort(option, direction)
                     },
                     miniPlayerViewModel = miniPlayerViewModel,
                     fullPlayerViewModel = fullPlayerViewModel

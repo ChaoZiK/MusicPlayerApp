@@ -15,7 +15,6 @@ import com.example.musicplayer.data.AlphabeticDirection
 import com.example.musicplayer.data.DurationDirection
 import com.example.musicplayer.data.SortDirection
 import com.example.musicplayer.data.SortOption
-import com.example.musicplayer.data.TimeDirection
 import com.example.musicplayer.ui.components.buttons.ActionButton
 import com.example.musicplayer.ui.components.buttons.CancelButton
 
@@ -96,35 +95,6 @@ fun SortSheet(
 
         ListItem(
             modifier = Modifier.clickable {
-                selectedOption = SortOption.TIME_ADDED
-                selectedDirection = TimeDirection.NewToOld
-            }.height(48.dp),
-            headlineContent = {
-                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    Text(
-                        "Time added",
-                        color = if (selectedOption == SortOption.TIME_ADDED)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            },
-            trailingContent = {
-                Box(modifier = Modifier.padding(end = 20.dp)) {
-                    RadioButton(
-                        selected = selectedOption == SortOption.TIME_ADDED,
-                        onClick = {
-                            selectedOption = SortOption.TIME_ADDED
-                            selectedDirection = TimeDirection.NewToOld
-                        }
-                    )
-                }
-            }
-        )
-
-        ListItem(
-            modifier = Modifier.clickable {
                 selectedOption = SortOption.DURATION
                 selectedDirection = DurationDirection.ShortToLong
             }.height(48.dp),
@@ -165,13 +135,6 @@ fun SortSheet(
                 DirectionSelector(
                     firstOption = AlphabeticDirection.AToZ,
                     secondOption = AlphabeticDirection.ZToA,
-                    selectedDirection = selectedDirection
-                ) { selectedDirection = it }
-            }
-            SortOption.TIME_ADDED -> {
-                DirectionSelector(
-                    firstOption = TimeDirection.NewToOld,
-                    secondOption = TimeDirection.OldToNew,
                     selectedDirection = selectedDirection
                 ) { selectedDirection = it }
             }

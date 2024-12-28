@@ -3,7 +3,6 @@ package com.example.musicplayer.data
 enum class SortOption {
     SONG_NAME,
     ARTIST_NAME,
-    TIME_ADDED,
     DURATION
 }
 
