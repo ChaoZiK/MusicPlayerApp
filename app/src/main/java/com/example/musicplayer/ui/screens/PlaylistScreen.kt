@@ -11,13 +11,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.musicplayer.data.Playlist
-import com.example.musicplayer.data.customPlaylists
 import com.example.musicplayer.data.defaultPlaylists
 import com.example.musicplayer.data.toSong
-import com.example.musicplayer.ui.components.playlist.AddPlaylistDialog
 import com.example.musicplayer.ui.components.playlist.PlaylistHeader
 import com.example.musicplayer.ui.components.playlist.PlaylistItem
-import com.example.musicplayer.ui.components.sheets.CustomPlaylistOptionsSheet
 import com.example.musicplayer.ui.components.sheets.DefaultPlaylistOptionsSheet
 import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
 import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
@@ -60,29 +57,12 @@ fun PlaylistScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             PlaylistHeader(
                 defaultPlaylistsCount = defaultPlaylists.size,
-                customPlaylistsCount = customPlaylists.size,
                 onAddClick = { showAddDialog = true }
             )
 
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-//                // Show Recent playlist
-//                items(defaultPlaylists.size) { index ->
-//                    val playlist = defaultPlaylists[index]
-//                    PlaylistItem(
-//                        playlist = playlist,
-//                        onPlaylistClick = {
-//                            navController.navigate("playlist/${playlist.id}")
-//                        },
-//                        onMoreClick = {
-//                            selectedPlaylist = playlist
-//                            showOptions = true
-//                        }
-//                    )
-//                }
-
-                // Add Recently Played item
                 item {
                     PlaylistItem(
                         playlist = recentlyPlayedPlaylist,
@@ -110,44 +90,8 @@ fun PlaylistScreen(
                         }
                     )
                 }
-
-                item {
-                    Text(
-                        text = "My playlists (${customPlaylists.size})",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(
-                            start = 16.dp,
-                            top = 24.dp,
-                            bottom = 16.dp
-                        ),
-                    )
-                }
-
-                items(customPlaylists.size) { index ->
-                    val playlist = customPlaylists[index]
-                    PlaylistItem(
-                        playlist = playlist,
-                        onPlaylistClick = {
-                            navController.navigate("playlist/${playlist.id}")
-                        },
-                        onMoreClick = {
-                            selectedPlaylist = playlist
-                            showOptions = true
-                        }
-                    )
-                }
             }
         }
-    }
-
-    if (showAddDialog) {
-        AddPlaylistDialog(
-            onDismiss = { showAddDialog = false },
-            onCreatePlaylist = {
-                // Handle playlist creation
-                showAddDialog = false
-            }
-        )
     }
 
     if (showOptions && selectedPlaylist != null) {
@@ -173,14 +117,6 @@ fun PlaylistScreen(
         ) {
             if (selectedPlaylist!!.isDefault) {
                 DefaultPlaylistOptionsSheet(
-                    playlist = selectedPlaylist!!,
-                    onDismiss = {
-                        showOptions = false
-                        selectedPlaylist = null
-                    }
-                )
-            } else {
-                CustomPlaylistOptionsSheet(
                     playlist = selectedPlaylist!!,
                     onDismiss = {
                         showOptions = false

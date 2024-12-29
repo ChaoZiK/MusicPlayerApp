@@ -28,7 +28,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.musicplayer.data.customPlaylists
 import com.example.musicplayer.data.defaultPlaylists
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.animations.Transitions

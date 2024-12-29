@@ -35,15 +35,3 @@ val defaultPlaylists = listOf(
         isDefault = true
     )
 )
-
-val customPlaylists = listOf(
-    Playlist(id = "playlist1", title = "d"),
-    Playlist(id = "playlist2", title = "indie", songs = listOf()),
-    Playlist(id = "playlist3", title = "sportvn"),
-    Playlist(id = "playlist4", title = "d"),
-    Playlist(id = "playlist5", title = "indie", songs = listOf()),
-    Playlist(id = "playlist6", title = "sportvn"),
-    Playlist(id = "playlist7", title = "d"),
-    Playlist(id = "playlist8", title = "indie", songs = listOf()),
-    Playlist(id = "playlist9", title = "sportvn")
-)

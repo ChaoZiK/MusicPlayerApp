@@ -36,54 +36,6 @@ fun SongOptionsSheet(
         onDismiss = onDismiss
     ) {
         Column(modifier = Modifier.padding(vertical = 8.dp)) {
-            OptionItem(
-                text = "Play next",
-                icon = AppIcons.nextSong,
-                onClick = { }
-            )
-            OptionItem(
-                text = "Add to queue",
-                icon = AppIcons.addToQueue,
-                onClick = { }
-            )
-            OptionItem(
-                text = "Add to playlist",
-                icon = AppIcons.addToPlaylist,
-                onClick = { }
-            )
-        }
-
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-            thickness = 1.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-        )
-
-        Column(modifier = Modifier.padding(vertical = 8.dp)) {
-            OptionItem(
-                text = "Change cover",
-                icon = AppIcons.image,
-                onClick = { }
-            )
-            OptionItem(
-                text = "Set as ringtone",
-                icon = AppIcons.bell,
-                onClick = { }
-            )
-        }
-
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-            thickness = 1.dp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-        )
-
-        Column(modifier = Modifier.padding(vertical = 8.dp)) {
-            OptionItem(
-                text = "Delete from device",
-                icon = AppIcons.trash,
-                onClick = { }
-            )
         }
     }
 }

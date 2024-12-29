@@ -21,23 +21,5 @@ fun DefaultPlaylistOptionsSheet(
             icon = AppIcons.play,
             onClick = onDismiss
         )
-
-        OptionItem(
-            text = "Play next",
-            icon = AppIcons.nextSong,
-            onClick = onDismiss
-        )
-
-        OptionItem(
-            text = "Add to queue",
-            icon = AppIcons.addToQueue,
-            onClick = onDismiss
-        )
-
-        OptionItem(
-            text = "Add to playlist",
-            icon = AppIcons.addToPlaylist,
-            onClick = onDismiss
-        )
     }
 }

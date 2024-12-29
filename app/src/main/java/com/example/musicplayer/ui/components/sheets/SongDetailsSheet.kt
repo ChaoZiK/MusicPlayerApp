@@ -43,12 +43,6 @@ fun SongDetailsSheet(
                 onClick = onDismiss,
                 modifier = Modifier.weight(1f)
             )
-
-            ActionButton(
-                text = "EDIT",
-                onClick = { /* Handle edit */ },
-                modifier = Modifier.weight(1f)
-            )
         }
     }
 }

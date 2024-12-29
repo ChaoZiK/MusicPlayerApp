@@ -7,13 +7,12 @@ import com.example.musicplayer.ui.components.shared.HeaderActionType
 @Composable
 fun PlaylistHeader(
     defaultPlaylistsCount: Int,
-    customPlaylistsCount: Int,
     onAddClick: () -> Unit
 ) {
     BaseHeader(
-        count = defaultPlaylistsCount + customPlaylistsCount,
+        count = defaultPlaylistsCount,
         title = "Playlists",
-        actionType = HeaderActionType.ADD,
+        actionType = HeaderActionType.TOP,
         onActionClick = onAddClick
     )
 }

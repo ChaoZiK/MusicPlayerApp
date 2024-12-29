@@ -19,7 +19,7 @@ import com.example.musicplayer.ui.components.buttons.SortButton
 import com.example.musicplayer.ui.theme.Dimensions
 
 enum class HeaderActionType {
-    ADD,
+    TOP,
     SORT
 }
 
@@ -47,13 +47,8 @@ fun BaseHeader(
         )
 
         when (actionType) {
-            HeaderActionType.ADD -> {
+            HeaderActionType.TOP -> {
                 IconButton(onClick = onActionClick) {
-                    Icon(
-                        imageVector = Icons.Rounded.Add,
-                        contentDescription = "Add $title",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
                 }
             }
             HeaderActionType.SORT -> {
