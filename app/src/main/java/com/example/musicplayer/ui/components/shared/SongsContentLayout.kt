@@ -38,11 +38,13 @@ fun SongsContentLayout(
   modifier: Modifier = Modifier,
   showTopBar: Boolean = false,
   topBarTitle: String = "",
+  isSearchScreen: Boolean = false,
   onBackPressed: (() -> Unit)? = null,
   onSearchClick: (() -> Unit)? = null,
   onShuffleClick: (() -> Unit)? = null,
   onSongClick: ((Song) -> Unit)? = null,
   onPlayClick: (() -> Unit)? = null,
+  showSort: Boolean = true,
   onSortSelected: ((SortOption, SortDirection) -> Unit)? = null,
   miniPlayerViewModel: MiniPlayerViewModel
 ) {
@@ -68,6 +70,7 @@ fun SongsContentLayout(
 
       SongsHeader(
         songCount = songs.size,
+        isSearchScreen = isSearchScreen,
         onSortClick = { showSortDialog = true }
       )
 
@@ -75,7 +78,9 @@ fun SongsContentLayout(
         EmptyList(
           modifier = Modifier
             .weight(1f)
-            .padding(vertical = 32.dp)
+            .padding(vertical = 32.dp),
+          titleText = if (isSearchScreen) "No results found" else "No songs yet",
+          subtitleText = if (isSearchScreen) "Try searching with a different keyword" else "Add songs to this playlist to start listening"
         )
       } else {
         ControlButtonsLayout(
@@ -118,7 +123,7 @@ fun SongsContentLayout(
       }
     )
 
-    if (showSortDialog) {
+    if (showSortDialog && showSort) {
       ModalBottomSheet(
         onDismissRequest = { showSortDialog = false },
         containerColor = MaterialTheme.colorScheme.surface,

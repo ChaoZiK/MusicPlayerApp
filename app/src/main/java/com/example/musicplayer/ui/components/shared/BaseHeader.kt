@@ -27,7 +27,7 @@ enum class HeaderActionType {
 fun BaseHeader(
     count: Int,
     title: String,
-    actionType: HeaderActionType,
+    actionType: HeaderActionType? = null,
     onActionClick: () -> Unit
 ) {
     Row(
@@ -58,6 +58,8 @@ fun BaseHeader(
             }
             HeaderActionType.SORT -> {
                 SortButton(onClick = onActionClick)
+            }
+            null -> {
             }
         }
     }

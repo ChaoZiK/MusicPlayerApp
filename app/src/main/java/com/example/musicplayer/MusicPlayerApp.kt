@@ -1,6 +1,7 @@
 package com.example.musicplayer
 
 
+import android.os.Process
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -102,8 +103,12 @@ private fun MusicNavGraph(
                 viewModel = viewModel,
                 onBackPressed = { navController.navigateUp() },
                 onSongClick = { song ->
-                    //fullPlayerViewModel.playSongByIndex(song.id) // Update with correct playback logic
-                }
+                   fullPlayerViewModel.updatePlaylist(listOf(song))
+                    fullPlayerViewModel.playSongByIndex(0) // Play the selected song
+                },
+                miniPlayerViewModel = miniPlayerViewModel,
+                fullPlayerViewModel = fullPlayerViewModel,
+                coroutineScope = rememberCoroutineScope()
             )
         }
 
@@ -217,7 +222,7 @@ fun MusicPlayerApp() {
     var showExitDialog by remember { mutableStateOf(false) }
 
     val showMiniPlayer = currentEntry?.destination?.route?.let { route ->
-        (route == Destinations.HOME || route == Destinations.RECENTLY_PLAYED || route == Destinations.FAVORITES || route.startsWith("playlist/")) &&
+        (route == Destinations.HOME || route == Destinations.RECENTLY_PLAYED || route == Destinations.FAVORITES || route == Destinations.SEARCH ||route.startsWith("playlist/")) &&
                 miniPlayerViewModel.currentSong.collectAsState().value != null
     } ?: false
 
@@ -267,7 +272,7 @@ fun MusicPlayerApp() {
                 ExitDialog(
                     onDismiss = { showExitDialog = false },
                     onConfirm = {
-                        android.os.Process.killProcess(android.os.Process.myPid())
+                        Process.killProcess(Process.myPid())
                     }
                 )
             }
