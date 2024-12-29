@@ -9,7 +9,8 @@ import com.example.musicplayer.ui.theme.AppIcons
 @Composable
 fun DefaultPlaylistOptionsSheet(
     playlist: Playlist,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onPlayClick: () -> Unit
 ) {
     BaseBottomSheet(
         title = playlist.title,
@@ -19,7 +20,10 @@ fun DefaultPlaylistOptionsSheet(
         OptionItem(
             text = "Play",
             icon = AppIcons.play,
-            onClick = onDismiss
+            onClick = {
+                onPlayClick()
+                onDismiss()
+            }
         )
     }
 }

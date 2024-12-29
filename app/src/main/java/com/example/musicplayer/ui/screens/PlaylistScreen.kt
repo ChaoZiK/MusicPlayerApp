@@ -17,6 +17,7 @@ import com.example.musicplayer.ui.components.playlist.PlaylistHeader
 import com.example.musicplayer.ui.components.playlist.PlaylistItem
 import com.example.musicplayer.ui.components.sheets.DefaultPlaylistOptionsSheet
 import com.example.musicplayer.ui.viewmodel.FavoriteListViewModel
+import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +25,8 @@ import com.example.musicplayer.ui.viewmodel.RecentlyPlayedViewModel
 fun PlaylistScreen(
     navController: NavController,
     favoriteListViewModel: FavoriteListViewModel = hiltViewModel(),
-    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel()
+    recentlyPlayedViewModel: RecentlyPlayedViewModel = hiltViewModel(),
+    fullPlayerViewModel: FullPlayerViewModel = hiltViewModel()
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
     var showOptions by remember { mutableStateOf(false) }
@@ -121,6 +123,13 @@ fun PlaylistScreen(
                     onDismiss = {
                         showOptions = false
                         selectedPlaylist = null
+                    },
+                    onPlayClick = {
+                        val firstSong = selectedPlaylist!!.songs.firstOrNull()
+                        if (firstSong != null) {
+                            fullPlayerViewModel.updatePlaylist(selectedPlaylist!!.songs)
+                            fullPlayerViewModel.playSongByIndex(0)
+                        }
                     }
                 )
             }
