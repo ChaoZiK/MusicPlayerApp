@@ -1,7 +1,9 @@
 package com.example.musicplayer.backend
 
 import android.content.Context
+import android.media.AudioManager
 import android.media.MediaPlayer
+import android.media.audiofx.LoudnessEnhancer
 import android.util.Log
 
 import com.example.musicplayer.data.Song
@@ -12,6 +14,35 @@ class MusicController(private val context: Context, private val onSongChanged: (
   private var mediaPlayer: MediaPlayer? = null
   private var songList: List<Song> = emptyList()
   private var currentSong: Song? = null
+
+  private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+  fun setVolume(volume: Float) {
+    val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+    val systemVolume = (volume * maxVolume).toInt().coerceIn(0, maxVolume)
+    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, systemVolume, 0)
+  }
+
+  fun getVolume(): Float {
+    val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+    val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+    return currentVolume / maxVolume.toFloat()
+  }
+
+  fun registerVolumeObserver(context: Context, onVolumeChange: (Float) -> Unit) {
+    val contentResolver = context.contentResolver
+    val observer = object : android.database.ContentObserver(null) {
+      override fun onChange(selfChange: Boolean) {
+        val currentVolume = getVolume() // Get the latest system volume
+        onVolumeChange(currentVolume)
+      }
+    }
+    contentResolver.registerContentObserver(
+      android.provider.Settings.System.CONTENT_URI,
+      true,
+      observer
+    )
+  }
 
   fun shuffleAndPlay(songs: List<Song>) {
     songList = songs

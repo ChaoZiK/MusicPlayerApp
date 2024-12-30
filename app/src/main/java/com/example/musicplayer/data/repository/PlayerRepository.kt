@@ -72,8 +72,9 @@ class PlayerRepository @Inject constructor(
     return _isFavorite.value
   }
 
-  fun updateVolume(newVolume: Float) {
-    _volume.value = newVolume.coerceIn(0f, 1f)
+  fun syncVolumeWithSystem() {
+    val systemVolume = musicController.getVolume()
+    _volume.value = systemVolume
   }
 
   fun updateSong(song: Song) {

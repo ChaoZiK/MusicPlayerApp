@@ -102,11 +102,8 @@ private fun VolumeSlider(
 
         // Invisible Slider
         Slider(
-            value = clampedVolume,
-            onValueChange = { newValue ->
-                val limitedValue = newValue.coerceIn(0f, 1f)
-                onVolumeChange(limitedValue)
-            },
+            value = volume,
+            onValueChange = { onVolumeChange(it.coerceIn(0.0f, 1.0f)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .alpha(0f),
