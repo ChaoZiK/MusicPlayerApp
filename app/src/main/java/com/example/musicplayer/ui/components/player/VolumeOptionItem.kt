@@ -1,4 +1,5 @@
 package com.example.musicplayer.ui.components.player
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -14,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -28,7 +28,9 @@ fun VolumeOptionItem(
     ListItem(
         headlineContent = {
             Box(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
             ) {
                 VolumeSlider(
                     volume = volume,
@@ -70,7 +72,6 @@ private fun VolumeSlider(
         val halfThumbSize = thumbSize / 2
         val thumbCenterPosition = trackWidth * clampedVolume
 
-        // Track Line
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +82,6 @@ private fun VolumeSlider(
                 )
         )
 
-        // Volume Line
         Box(
             modifier = Modifier
                 .width(thumbCenterPosition)
@@ -92,7 +92,6 @@ private fun VolumeSlider(
                 )
         )
 
-        // Thumb
         Box(
             modifier = Modifier
                 .offset(x = thumbCenterPosition - halfThumbSize)
@@ -100,7 +99,6 @@ private fun VolumeSlider(
                 .background(MaterialTheme.colorScheme.primary, CircleShape)
         )
 
-        // Invisible Slider
         Slider(
             value = volume,
             onValueChange = { onVolumeChange(it.coerceIn(0.0f, 1.0f)) },

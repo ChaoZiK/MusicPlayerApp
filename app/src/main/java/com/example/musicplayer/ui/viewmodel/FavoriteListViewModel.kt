@@ -13,12 +13,11 @@ import javax.inject.Inject
 class FavoriteListViewModel @Inject constructor(
     private val favoriteDAO: FavoriteDAO
 ) : ViewModel() {
-    // Use LiveData from DAO directly
     val favoriteSongs: LiveData<List<FavoriteSong>> = favoriteDAO.getAllFavorites()
 
     fun updateFavoriteSongs(updatedSongs: List<FavoriteSong>) {
         viewModelScope.launch {
-            favoriteDAO.deleteAllFavorites() // Optional: clear all existing favorites
+            favoriteDAO.deleteAllFavorites()
             updatedSongs.forEach { favoriteDAO.insertFavorite(it) }
         }
     }

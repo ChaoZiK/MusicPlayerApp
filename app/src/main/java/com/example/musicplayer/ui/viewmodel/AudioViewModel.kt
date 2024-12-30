@@ -30,16 +30,10 @@ class AudioViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateSongs(fetchedSongs: List<Song>) {
-        val sortedSongs = sortSongs(fetchedSongs, currentSortOption, currentSortDirection)
-        _songs.postValue(sortedSongs)
-    }
-
     fun updateSort(option: SortOption, direction: SortDirection) {
         currentSortOption = option
         currentSortDirection = direction
 
-        // Reapply sorting to the current song list
         _songs.value?.let { unsortedSongs ->
             val sortedSongs = sortSongs(unsortedSongs, option, direction)
             _songs.postValue(sortedSongs)

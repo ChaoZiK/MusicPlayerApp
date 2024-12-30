@@ -1,7 +1,6 @@
 package com.example.musicplayer.ui.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -69,11 +68,7 @@ class FullPlayerViewModel @Inject constructor(
     }
 
     fun playSongByIndex(index: Int) {
-        val song = playerRepository.playlist.value.getOrNull(index)
-        if (song == null) {
-            Log.d("FullPlayerViewModel", "Invalid index: $index. Cannot play song.")
-            return
-        }
+        val song = playerRepository.playlist.value.getOrNull(index) ?: return
 
         if (song != playerRepository.currentSong.value) {
             musicController.stop()
@@ -82,15 +77,6 @@ class FullPlayerViewModel @Inject constructor(
             playerRepository.togglePlayPause()
         }
     }
-
-    fun updateSong(song: Song) {
-        playerRepository.updateSong(song)
-        viewModelScope.launch {
-            val isFavoriteSong = favoriteDAO.getFavoriteBySongId(song.id)
-            playerRepository.toggleFavorite(song)
-        }
-    }
-
 
     fun togglePlayPause() {
         playerRepository.togglePlayPause()
@@ -109,27 +95,18 @@ class FullPlayerViewModel @Inject constructor(
             }
         }
     }
-    fun playNext() {
-        val nextSong = playerRepository.nextSong()
-        if (nextSong == null) {
-            Log.d("FullPlayerViewModel", "No next song available.")
-            return
-        }
 
-        Log.d("FullPlayerViewModel", "Playing next song: ${nextSong.title}")
+    fun playNext() {
+        val nextSong = playerRepository.nextSong() ?: return
+
         musicController.stop()
         musicController.playSong(nextSong)
         playerRepository.togglePlayPause()
     }
 
     fun playPrevious() {
-        val previousSong = playerRepository.previousSong()
-        if (previousSong == null) {
-            Log.d("FullPlayerViewModel", "No previous song available.")
-            return
-        }
+        val previousSong = playerRepository.previousSong() ?: return
 
-        Log.d("FullPlayerViewModel", "Playing previous song: ${previousSong.title}")
         musicController.stop()
         musicController.playSong(previousSong)
         playerRepository.togglePlayPause()

@@ -12,7 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor() : ViewModel() {
     private val _isSearchActive = MutableStateFlow(false)
-    val isSearchActive: StateFlow<Boolean> = _isSearchActive
 
     private val _searchText = MutableStateFlow("")
     val searchText: StateFlow<String> = _searchText

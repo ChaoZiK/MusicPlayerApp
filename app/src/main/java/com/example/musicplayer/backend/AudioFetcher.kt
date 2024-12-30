@@ -4,6 +4,7 @@ import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
 import com.example.musicplayer.data.Song
+import java.util.Locale
 
 class AudioFetcher(private val context: Context) {
 
@@ -37,12 +38,19 @@ class AudioFetcher(private val context: Context) {
 
             cursor?.use {
                 while (it.moveToNext()) {
-                    val id = it.getLong(it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)).toString()
-                    val title = it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)) ?: "Unknown Title"
-                    val album = it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)) ?: "Unknown Album"
-                    val artist = it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)) ?: "Unknown Artist"
-                    val duration = it.getLong(it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
-                    val path = it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)) ?: ""
+                    val id =
+                        it.getLong(it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)).toString()
+                    val title = it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
+                        ?: "Unknown Title"
+                    val album = it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
+                        ?: "Unknown Album"
+                    val artist =
+                        it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
+                            ?: "Unknown Artist"
+                    val duration =
+                        it.getLong(it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
+                    val path =
+                        it.getString(it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)) ?: ""
                     val artUri = "content://media/external/audio/albumart/$id"
 
                     if (path.isNotEmpty() && title.isNotEmpty()) {
@@ -52,21 +60,13 @@ class AudioFetcher(private val context: Context) {
                                 title = title,
                                 album = album,
                                 artist = artist,
-                                duration = formatDuration(duration), // Format duration to string "min:sec"
+                                duration = formatDuration(duration),
                                 path = path,
                                 artUri = artUri
                             )
                         )
-                    } else {
-                        Log.w(
-                            "AudioFetcher",
-                            "Skipped song with missing data: ID=$id, Title=$title, Path=$path, Duration=$duration"
-                        )
-
                     }
                 }
-            } ?: run {
-                Log.e("AudioFetcher", "Cursor is null. Query might have failed.")
             }
         } catch (e: Exception) {
             Log.e("AudioFetcher", "Error fetching audio files: ${e.message}", e)
@@ -77,6 +77,6 @@ class AudioFetcher(private val context: Context) {
     private fun formatDuration(durationInMillis: Long): String {
         val minutes = (durationInMillis / 1000) / 60
         val seconds = (durationInMillis / 1000) % 60
-        return String.format("%d:%02d", minutes, seconds)
+        return String.format(Locale.US, "%d:%02d", minutes, seconds)
     }
 }

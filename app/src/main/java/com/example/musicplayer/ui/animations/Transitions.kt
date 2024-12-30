@@ -35,26 +35,29 @@ object Transitions {
     val fadeOut = fadeOut(animationSpec = tween(300))
 
     object Navigation {
-        val defaultEnter: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
-            fadeIn(animationSpec = tween(300))
-        }
+        val defaultEnter: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
+            {
+                fadeIn(animationSpec = tween(300))
+            }
 
         val defaultExit: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
             fadeOut(animationSpec = tween(300))
         }
 
-        val fullPlayerEnter: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
-            slideInVertically(
-                initialOffsetY = { it },
-                animationSpec = tween(300)
-            ) + fadeIn(animationSpec = tween(300))
-        }
+        val fullPlayerEnter: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
+            {
+                slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(300)
+                ) + fadeIn(animationSpec = tween(300))
+            }
 
-        val fullPlayerExit: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
-            slideOutVertically(
-                targetOffsetY = { it },
-                animationSpec = tween(300)
-            ) + fadeOut(animationSpec = tween(300))
-        }
+        val fullPlayerExit: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition =
+            {
+                slideOutVertically(
+                    targetOffsetY = { it },
+                    animationSpec = tween(300)
+                ) + fadeOut(animationSpec = tween(300))
+            }
     }
 }

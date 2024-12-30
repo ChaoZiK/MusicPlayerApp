@@ -10,11 +10,11 @@ fun SongsHeader(
     isSearchScreen: Boolean = false,
     onSortClick: () -> Unit
 ) {
-    val title = if (isSearchScreen) "results" else "Songs" // Update title dynamically
+    val title = if (isSearchScreen) "results" else "Songs"
     BaseHeader(
         count = songCount,
         title = title,
-        actionType = if (isSearchScreen) null else HeaderActionType.SORT, // Hide sort for SearchScreen
+        actionType = if (isSearchScreen) null else HeaderActionType.SORT,
         onActionClick = onSortClick
     )
 }

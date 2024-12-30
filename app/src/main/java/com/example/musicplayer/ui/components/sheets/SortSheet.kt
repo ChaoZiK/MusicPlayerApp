@@ -36,10 +36,12 @@ fun SortSheet(
         )
 
         ListItem(
-            modifier = Modifier.clickable {
-                selectedOption = SortOption.SONG_NAME
-                selectedDirection = AlphabeticDirection.AToZ
-            }.height(48.dp),
+            modifier = Modifier
+                .clickable {
+                    selectedOption = SortOption.SONG_NAME
+                    selectedDirection = AlphabeticDirection.AToZ
+                }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -65,10 +67,12 @@ fun SortSheet(
         )
 
         ListItem(
-            modifier = Modifier.clickable {
-                selectedOption = SortOption.ARTIST_NAME
-                selectedDirection = AlphabeticDirection.AToZ
-            }.height(48.dp),
+            modifier = Modifier
+                .clickable {
+                    selectedOption = SortOption.ARTIST_NAME
+                    selectedDirection = AlphabeticDirection.AToZ
+                }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -94,10 +98,12 @@ fun SortSheet(
         )
 
         ListItem(
-            modifier = Modifier.clickable {
-                selectedOption = SortOption.DURATION
-                selectedDirection = DurationDirection.ShortToLong
-            }.height(48.dp),
+            modifier = Modifier
+                .clickable {
+                    selectedOption = SortOption.DURATION
+                    selectedDirection = DurationDirection.ShortToLong
+                }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -138,6 +144,7 @@ fun SortSheet(
                     selectedDirection = selectedDirection
                 ) { selectedDirection = it }
             }
+
             SortOption.DURATION -> {
                 DirectionSelector(
                     firstOption = DurationDirection.ShortToLong,
@@ -179,7 +186,9 @@ private fun DirectionSelector(
 ) {
     Column {
         ListItem(
-            modifier = Modifier.clickable { onDirectionSelected(firstOption) }.height(48.dp),
+            modifier = Modifier
+                .clickable { onDirectionSelected(firstOption) }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -202,7 +211,9 @@ private fun DirectionSelector(
         )
 
         ListItem(
-            modifier = Modifier.clickable { onDirectionSelected(secondOption) }.height(48.dp),
+            modifier = Modifier
+                .clickable { onDirectionSelected(secondOption) }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(

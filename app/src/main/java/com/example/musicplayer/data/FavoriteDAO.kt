@@ -9,18 +9,18 @@ import androidx.room.Query
 
 @Dao
 interface FavoriteDAO {
-  @Insert(onConflict = OnConflictStrategy.IGNORE)
-  suspend fun insertFavorite(favorite: FavoriteSong): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertFavorite(favorite: FavoriteSong): Long
 
-  @Delete
-  suspend fun deleteFavorite(favorite: FavoriteSong)
+    @Delete
+    suspend fun deleteFavorite(favorite: FavoriteSong)
 
-  @Query("DELETE FROM favorites_table")
-  suspend fun deleteAllFavorites()
+    @Query("DELETE FROM favorites_table")
+    suspend fun deleteAllFavorites()
 
-  @Query("SELECT * FROM favorites_table ORDER BY addedTimestamp DESC")
-  fun getAllFavorites(): LiveData<List<FavoriteSong>>
+    @Query("SELECT * FROM favorites_table ORDER BY addedTimestamp DESC")
+    fun getAllFavorites(): LiveData<List<FavoriteSong>>
 
-  @Query("SELECT * FROM favorites_table WHERE songId = :songId LIMIT 1")
-  suspend fun getFavoriteBySongId(songId: kotlin.String): FavoriteSong?
+    @Query("SELECT * FROM favorites_table WHERE songId = :songId LIMIT 1")
+    suspend fun getFavoriteBySongId(songId: String): FavoriteSong?
 }

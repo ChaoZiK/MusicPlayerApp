@@ -12,8 +12,7 @@ import com.example.musicplayer.ui.theme.AppIcons
 
 @Composable
 fun MoreButton(
-    onMoreClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onMoreClick: () -> Unit
 ) {
     IconButton(onClick = onMoreClick) {
         Icon(

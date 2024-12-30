@@ -12,7 +12,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.musicplayer.data.Playlist
 import com.example.musicplayer.ui.theme.AppIcons
 
 sealed class DrawerIcon {
@@ -72,8 +71,7 @@ fun DrawerContent(
                 ) {
                     selectedItem = "information"
                     onItemClick("information")
-                },
-                selectedItem = selectedItem
+                }
             )
 
             DrawerItem(
@@ -84,7 +82,6 @@ fun DrawerContent(
                     selectedItem = "feedback"
                     onItemClick("feedback")
                 },
-                selectedItem = selectedItem,
             )
 
             DrawerItem(
@@ -94,8 +91,7 @@ fun DrawerContent(
                 ) {
                     selectedItem = "exit"
                     onItemClick("exit")
-                },
-                selectedItem = selectedItem
+                }
             )
 
             Spacer(modifier = Modifier.weight(1f))

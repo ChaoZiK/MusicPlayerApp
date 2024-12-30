@@ -13,7 +13,7 @@ data class Playlist(
     val isDefault: Boolean = false,
     val coverImage: String? = null
 ) {
-    val type: PlaylistType = when(id) {
+    val type: PlaylistType = when (id) {
         "favorite" -> PlaylistType.FAVOURITE
         "recent" -> PlaylistType.RECENT
         else -> PlaylistType.CUSTOM

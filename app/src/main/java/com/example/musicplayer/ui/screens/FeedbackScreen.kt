@@ -151,7 +151,11 @@ fun FeedbackScreen(
                         if (selectedProblem.isNotEmpty() && userInput.length >= 6) {
                             sendEmail(context, selectedProblem, userInput)
                         } else {
-                            Toast.makeText(context, "Please select a problem and provide detailed feedback.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Please select a problem and provide detailed feedback.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     },
                     modifier = Modifier
