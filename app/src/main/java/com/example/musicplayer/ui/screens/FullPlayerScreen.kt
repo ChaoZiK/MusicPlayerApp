@@ -44,8 +44,6 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.musicplayer.backend.shareAudioFile
-import com.example.musicplayer.ui.components.buttons.AddToPlaylistButton
-import com.example.musicplayer.ui.components.buttons.CurrentPlayingButton
 import com.example.musicplayer.ui.components.buttons.DownButton
 import com.example.musicplayer.ui.components.buttons.FavoriteButton
 import com.example.musicplayer.ui.components.buttons.MoreButton
@@ -282,9 +280,9 @@ private fun ActionButtons(
             isFavorite = isFavorite,
             onClick = onFavoriteClick
         )
-        AddToPlaylistButton()
+        Spacer(modifier = Modifier.width(96.dp))
+
         ShareButton(onClick = onShareClick)
-        CurrentPlayingButton()
     }
 }
 
