@@ -1,5 +1,7 @@
 package com.example.musicplayer.ui.screens
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.musicplayer.R
@@ -23,7 +26,9 @@ import com.example.musicplayer.ui.components.buttons.BackButton
 fun FeedbackScreen(
     onBackClick: () -> Unit
 ) {
+    var selectedProblem by remember { mutableStateOf("") }
     var userInput by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
@@ -88,10 +93,13 @@ fun FeedbackScreen(
 
                     problems.forEach { problem ->
                         Button(
-                            onClick = { /* Handle click */ },
+                            onClick = { selectedProblem = problem },
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                                containerColor = if (selectedProblem == problem)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
                             ),
                             elevation = ButtonDefaults.buttonElevation(
                                 defaultElevation = 0.dp,
@@ -135,7 +143,48 @@ fun FeedbackScreen(
                         textAlign = TextAlign.Start
                     )
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        if (selectedProblem.isNotEmpty() && userInput.length >= 6) {
+                            sendEmail(context, selectedProblem, userInput)
+                        } else {
+                            Toast.makeText(context, "Please select a problem and provide detailed feedback.", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(32.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(
+                        text = "Send Feedback",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
             }
         }
+    }
+}
+
+private fun sendEmail(context: Context, problem: String, details: String) {
+    val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+        type = "message/rfc822"
+        putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf("tranthephong101@gmail.com"))
+        putExtra(android.content.Intent.EXTRA_SUBJECT, problem)
+        putExtra(android.content.Intent.EXTRA_TEXT, details)
+    }
+
+    try {
+        context.startActivity(android.content.Intent.createChooser(intent, "Send Feedback"))
+    } catch (e: Exception) {
+        Toast.makeText(context, "Error sending email: ${e.message}", Toast.LENGTH_SHORT).show()
     }
 }
