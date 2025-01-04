@@ -21,10 +21,10 @@ class PlayerRepository @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val _currentSong = MutableStateFlow<Song?>(null)
-    val currentSong = _currentSong.asStateFlow()
+    var currentSong = _currentSong.asStateFlow()
 
     private val _isPlaying = MutableStateFlow(false)
-    val isPlaying = _isPlaying.asStateFlow()
+    var isPlaying = _isPlaying.asStateFlow()
 
     private val _progress = MutableStateFlow(0f)
     val progress = _progress.asStateFlow()
