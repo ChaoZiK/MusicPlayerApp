@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.musicplayer.backend.sortSongs
-import com.example.musicplayer.data.FavoriteSong
 import com.example.musicplayer.data.toFavoriteSong
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 fun FavoriteListScreen(
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onSongClick: (FavoriteSong) -> Unit,
     viewModel: FavoriteListViewModel = hiltViewModel(),
     miniPlayerViewModel: MiniPlayerViewModel,
     fullPlayerViewModel: FullPlayerViewModel,

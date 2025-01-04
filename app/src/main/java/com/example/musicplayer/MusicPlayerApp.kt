@@ -140,9 +140,6 @@ private fun MusicNavGraph(
             val favoriteSongs by favoriteViewModel.favoriteSongs.observeAsState(emptyList())
 
             FavoriteListScreen(
-                onSongClick = { song ->
-                    navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
-                },
                 onBackClick = { navController.navigateUp() },
                 onSearchClick = {
                     viewModel.activateSearch(favoriteSongs.map { it.toSong() })
@@ -169,9 +166,6 @@ private fun MusicNavGraph(
                 onSearchClick = {
                     viewModel.activateSearch(recentlyPlayedSongs.map { it.toSong() })
                     navController.navigate(Destinations.SEARCH)
-                },
-                onSongClick = { song ->
-                    navController.navigate("${Destinations.FULL_PLAYER}/${song.songId}")
                 },
                 miniPlayerViewModel = miniPlayerViewModel,
                 fullPlayerViewModel = fullPlayerViewModel,

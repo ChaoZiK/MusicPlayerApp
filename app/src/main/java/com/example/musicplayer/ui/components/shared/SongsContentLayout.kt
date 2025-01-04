@@ -49,7 +49,7 @@ fun SongsContentLayout(
   miniPlayerViewModel: MiniPlayerViewModel
 ) {
   val context = LocalContext.current
-  val musicController = remember {
+  remember {
       MusicController(context)
       {song -> miniPlayerViewModel.updateSong(song)}}
 

@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.musicplayer.backend.sortSongs
-import com.example.musicplayer.data.RecentlyPlayedSong
 import com.example.musicplayer.data.toRecentlyPlayedSong
 import com.example.musicplayer.data.toSong
 import com.example.musicplayer.ui.components.shared.SongsContentLayout
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 fun RecentlyPlayedListScreen(
     onBackClick: () -> Unit,
     onSearchClick: () -> Unit,
-    onSongClick: (RecentlyPlayedSong) -> Unit,
     viewModel: RecentlyPlayedViewModel = hiltViewModel(),
     miniPlayerViewModel: MiniPlayerViewModel,
     fullPlayerViewModel: FullPlayerViewModel,
