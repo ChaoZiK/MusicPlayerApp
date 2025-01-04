@@ -1,6 +1,6 @@
 package com.example.musicplayer.ui.viewmodel
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,16 +11,16 @@ import com.example.musicplayer.data.repository.PlayerRepository
 import com.example.musicplayer.data.Song
 import com.example.musicplayer.data.toFavoritesSong
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class FullPlayerViewModel @Inject constructor(
     private val playerRepository: PlayerRepository,
-    private val musicController: MusicController, // Inject MusicController
-    private val favoriteDAO: FavoriteDAO
+    private val musicController: MusicController,
+    private val favoriteDAO: FavoriteDAO,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val isPlaying = playerRepository.isPlaying
@@ -39,7 +39,14 @@ class FullPlayerViewModel @Inject constructor(
     private val _snackbarMessage = MutableLiveData<String?>()
     val snackbarMessage: LiveData<String?> = _snackbarMessage
 
-    fun showSnackbarMessage(message: String) {
+    init {
+        syncSystemVolume()
+        musicController.registerVolumeObserver(context) {
+            playerRepository.syncVolumeWithSystem()
+        }
+    }
+
+    private fun showSnackbarMessage(message: String) {
         _snackbarMessage.value = message
     }
 
@@ -47,8 +54,13 @@ class FullPlayerViewModel @Inject constructor(
         _snackbarMessage.value = null
     }
 
-    fun updateVolume(newVolume: Float) {
-        playerRepository.updateVolume(newVolume)
+    private fun syncSystemVolume() {
+        playerRepository.syncVolumeWithSystem()
+    }
+
+    fun updateSystemVolume(volume: Float) {
+        musicController.setVolume(volume)
+        playerRepository.syncVolumeWithSystem()
     }
 
     fun updatePlaylist(songs: List<Song>) {
@@ -56,28 +68,15 @@ class FullPlayerViewModel @Inject constructor(
     }
 
     fun playSongByIndex(index: Int) {
-        val song = playerRepository.playlist.value.getOrNull(index)
-        if (song == null) {
-            Log.d("FullPlayerViewModel", "Invalid index: $index. Cannot play song.")
-            return
-        }
+        val song = playerRepository.playlist.value.getOrNull(index) ?: return
 
         if (song != playerRepository.currentSong.value) {
             musicController.stop()
             playerRepository.updateSongByIndex(index)
             musicController.playSong(song)
-            playerRepository.togglePlayPause() // Ensure progress updates start
+            playerRepository.togglePlayPause()
         }
     }
-
-    fun updateSong(song: Song) {
-        playerRepository.updateSong(song)
-        viewModelScope.launch {
-            val isFavoriteSong = favoriteDAO.getFavoriteBySongId(song.id)
-            playerRepository.toggleFavorite(song)
-        }
-    }
-
 
     fun togglePlayPause() {
         playerRepository.togglePlayPause()
@@ -88,40 +87,29 @@ class FullPlayerViewModel @Inject constructor(
         viewModelScope.launch {
             val favorite = favoriteDAO.getFavoriteBySongId(song.id)
             if (favorite == null) {
-                // Add the song to the favorites list
                 favoriteDAO.insertFavorite(song.toFavoritesSong(System.currentTimeMillis()))
                 playerRepository.toggleFavorite(song)
             } else {
-                // Remove the song from the favorites list
                 favoriteDAO.deleteFavorite(favorite)
                 playerRepository.toggleFavorite(song)
             }
         }
     }
-    fun playNext() {
-        val nextSong = playerRepository.nextSong()
-        if (nextSong == null) {
-            Log.d("FullPlayerViewModel", "No next song available.")
-            return
-        }
 
-        Log.d("FullPlayerViewModel", "Playing next song: ${nextSong.title}")
-        musicController.stop() // Stop the current song
-        musicController.playSong(nextSong) // Play the next song
-        playerRepository.togglePlayPause() // Start progress updates
+    fun playNext() {
+        val nextSong = playerRepository.nextSong() ?: return
+
+        musicController.stop()
+        musicController.playSong(nextSong)
+        playerRepository.togglePlayPause()
     }
 
     fun playPrevious() {
-        val previousSong = playerRepository.previousSong()
-        if (previousSong == null) {
-            Log.d("FullPlayerViewModel", "No previous song available.")
-            return
-        }
+        val previousSong = playerRepository.previousSong() ?: return
 
-        Log.d("FullPlayerViewModel", "Playing previous song: ${previousSong.title}")
-        musicController.stop() // Stop the current song
-        musicController.playSong(previousSong) // Play the previous song
-        playerRepository.togglePlayPause() // Start progress updates
+        musicController.stop()
+        musicController.playSong(previousSong)
+        playerRepository.togglePlayPause()
     }
 
     fun seekTo(newProgress: Float) {

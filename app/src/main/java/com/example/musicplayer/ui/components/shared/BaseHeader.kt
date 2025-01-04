@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,7 +16,7 @@ import com.example.musicplayer.ui.components.buttons.SortButton
 import com.example.musicplayer.ui.theme.Dimensions
 
 enum class HeaderActionType {
-    ADD,
+    TOP,
     SORT
 }
 
@@ -27,7 +24,7 @@ enum class HeaderActionType {
 fun BaseHeader(
     count: Int,
     title: String,
-    actionType: HeaderActionType,
+    actionType: HeaderActionType? = null,
     onActionClick: () -> Unit
 ) {
     Row(
@@ -47,17 +44,16 @@ fun BaseHeader(
         )
 
         when (actionType) {
-            HeaderActionType.ADD -> {
+            HeaderActionType.TOP -> {
                 IconButton(onClick = onActionClick) {
-                    Icon(
-                        imageVector = Icons.Rounded.Add,
-                        contentDescription = "Add $title",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
                 }
             }
+
             HeaderActionType.SORT -> {
                 SortButton(onClick = onActionClick)
+            }
+
+            null -> {
             }
         }
     }

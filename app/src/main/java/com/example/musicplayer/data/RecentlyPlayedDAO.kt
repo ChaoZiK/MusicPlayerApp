@@ -23,4 +23,7 @@ interface RecentlyPlayedDAO {
 
     @Update
     suspend fun updateRecentlyPlayed(song: RecentlyPlayedSong)
+
+    @Query("DELETE FROM recently_played_table")
+    suspend fun deleteAllRecentlyPlayed()
 }

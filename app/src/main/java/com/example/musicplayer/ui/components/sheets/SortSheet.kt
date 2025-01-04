@@ -15,7 +15,6 @@ import com.example.musicplayer.data.AlphabeticDirection
 import com.example.musicplayer.data.DurationDirection
 import com.example.musicplayer.data.SortDirection
 import com.example.musicplayer.data.SortOption
-import com.example.musicplayer.data.TimeDirection
 import com.example.musicplayer.ui.components.buttons.ActionButton
 import com.example.musicplayer.ui.components.buttons.CancelButton
 
@@ -37,10 +36,12 @@ fun SortSheet(
         )
 
         ListItem(
-            modifier = Modifier.clickable {
-                selectedOption = SortOption.SONG_NAME
-                selectedDirection = AlphabeticDirection.AToZ
-            }.height(48.dp),
+            modifier = Modifier
+                .clickable {
+                    selectedOption = SortOption.SONG_NAME
+                    selectedDirection = AlphabeticDirection.AToZ
+                }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -66,10 +67,12 @@ fun SortSheet(
         )
 
         ListItem(
-            modifier = Modifier.clickable {
-                selectedOption = SortOption.ARTIST_NAME
-                selectedDirection = AlphabeticDirection.AToZ
-            }.height(48.dp),
+            modifier = Modifier
+                .clickable {
+                    selectedOption = SortOption.ARTIST_NAME
+                    selectedDirection = AlphabeticDirection.AToZ
+                }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -95,39 +98,12 @@ fun SortSheet(
         )
 
         ListItem(
-            modifier = Modifier.clickable {
-                selectedOption = SortOption.TIME_ADDED
-                selectedDirection = TimeDirection.NewToOld
-            }.height(48.dp),
-            headlineContent = {
-                Box(modifier = Modifier.padding(horizontal = 20.dp)) {
-                    Text(
-                        "Time added",
-                        color = if (selectedOption == SortOption.TIME_ADDED)
-                            MaterialTheme.colorScheme.primary
-                        else
-                            MaterialTheme.colorScheme.onSurface
-                    )
+            modifier = Modifier
+                .clickable {
+                    selectedOption = SortOption.DURATION
+                    selectedDirection = DurationDirection.ShortToLong
                 }
-            },
-            trailingContent = {
-                Box(modifier = Modifier.padding(end = 20.dp)) {
-                    RadioButton(
-                        selected = selectedOption == SortOption.TIME_ADDED,
-                        onClick = {
-                            selectedOption = SortOption.TIME_ADDED
-                            selectedDirection = TimeDirection.NewToOld
-                        }
-                    )
-                }
-            }
-        )
-
-        ListItem(
-            modifier = Modifier.clickable {
-                selectedOption = SortOption.DURATION
-                selectedDirection = DurationDirection.ShortToLong
-            }.height(48.dp),
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -168,13 +144,7 @@ fun SortSheet(
                     selectedDirection = selectedDirection
                 ) { selectedDirection = it }
             }
-            SortOption.TIME_ADDED -> {
-                DirectionSelector(
-                    firstOption = TimeDirection.NewToOld,
-                    secondOption = TimeDirection.OldToNew,
-                    selectedDirection = selectedDirection
-                ) { selectedDirection = it }
-            }
+
             SortOption.DURATION -> {
                 DirectionSelector(
                     firstOption = DurationDirection.ShortToLong,
@@ -216,7 +186,9 @@ private fun DirectionSelector(
 ) {
     Column {
         ListItem(
-            modifier = Modifier.clickable { onDirectionSelected(firstOption) }.height(48.dp),
+            modifier = Modifier
+                .clickable { onDirectionSelected(firstOption) }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(
@@ -239,7 +211,9 @@ private fun DirectionSelector(
         )
 
         ListItem(
-            modifier = Modifier.clickable { onDirectionSelected(secondOption) }.height(48.dp),
+            modifier = Modifier
+                .clickable { onDirectionSelected(secondOption) }
+                .height(48.dp),
             headlineContent = {
                 Box(modifier = Modifier.padding(horizontal = 20.dp)) {
                     Text(

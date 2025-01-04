@@ -44,7 +44,6 @@ fun ProgressSlider(
         val halfThumbSize = thumbSize / 2
         val thumbCenterPosition = trackWidth * clampedProgress
 
-        //Track Line
         Box(
             modifier = Modifier
                 .width(trackWidth)
@@ -55,7 +54,6 @@ fun ProgressSlider(
                 )
         )
 
-        //Progress Line
         Box(
             modifier = Modifier
                 .width(thumbCenterPosition)
@@ -66,7 +64,6 @@ fun ProgressSlider(
                 )
         )
 
-        //Thumb
         Box(
             modifier = Modifier
                 .offset(x = thumbCenterPosition - halfThumbSize)

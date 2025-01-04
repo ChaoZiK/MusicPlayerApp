@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun DrawerItem(
     item: DrawerItemData,
-    selectedItem: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -36,6 +35,7 @@ fun DrawerItem(
                 tint = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.size(24.dp)
             )
+
             is DrawerIcon.VectorIcon -> Icon(
                 imageVector = icon.imageVector,
                 contentDescription = null,

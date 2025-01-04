@@ -1,7 +1,5 @@
 package com.example.musicplayer.ui.screens
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Arrangement
@@ -42,10 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.musicplayer.backend.shareAudioFile
-import com.example.musicplayer.ui.components.buttons.AddToPlaylistButton
-import com.example.musicplayer.ui.components.buttons.CurrentPlayingButton
 import com.example.musicplayer.ui.components.buttons.DownButton
 import com.example.musicplayer.ui.components.buttons.FavoriteButton
 import com.example.musicplayer.ui.components.buttons.MoreButton
@@ -54,7 +49,6 @@ import com.example.musicplayer.ui.components.player.AlbumArt
 import com.example.musicplayer.ui.components.player.PlayerControls
 import com.example.musicplayer.ui.components.sheets.FullPlayerOptionsSheet
 import com.example.musicplayer.ui.components.sheets.SongDetailsSheet
-import com.example.musicplayer.ui.viewmodel.AudioViewModel
 import com.example.musicplayer.ui.viewmodel.FullPlayerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,8 +70,6 @@ fun FullPlayerScreen(
     val repeatMode by viewModel.repeatMode.collectAsState()
     var showOptionsSheet by remember { mutableStateOf(false) }
     var showDetails by remember { mutableStateOf(false) }
-    val audioViewModel: AudioViewModel = viewModel()
-    val songs by audioViewModel.songs.observeAsState(emptyList())
     val context = LocalContext.current
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -150,7 +142,6 @@ fun FullPlayerScreen(
                     },
                     isFavorite = isFavorite,
                     onFavoriteClick = {
-                        Log.d("FullPlayerScreen", "Favorite button clicked")
                         viewModel.toggleFavorite()
                     },
                     onShareClick = {
@@ -282,9 +273,9 @@ private fun ActionButtons(
             isFavorite = isFavorite,
             onClick = onFavoriteClick
         )
-        AddToPlaylistButton()
+        Spacer(modifier = Modifier.width(96.dp))
+
         ShareButton(onClick = onShareClick)
-        CurrentPlayingButton()
     }
 }
 

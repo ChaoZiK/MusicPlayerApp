@@ -8,6 +8,7 @@ import com.example.musicplayer.data.repository.PlayerRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -24,7 +25,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMusicController(
-        context: Context,
+        @ApplicationContext context: Context,
         playerRepository: dagger.Lazy<PlayerRepository>
     ): MusicController {
         return MusicController(context) { song ->

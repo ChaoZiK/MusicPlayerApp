@@ -6,7 +6,6 @@ import com.example.musicplayer.data.Song
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.ui.unit.dp
-import com.example.musicplayer.ui.components.buttons.ActionButton
 import com.example.musicplayer.ui.components.buttons.CancelButton
 
 @Composable
@@ -41,12 +40,6 @@ fun SongDetailsSheet(
         ) {
             CancelButton(
                 onClick = onDismiss,
-                modifier = Modifier.weight(1f)
-            )
-
-            ActionButton(
-                text = "EDIT",
-                onClick = { /* Handle edit */ },
                 modifier = Modifier.weight(1f)
             )
         }

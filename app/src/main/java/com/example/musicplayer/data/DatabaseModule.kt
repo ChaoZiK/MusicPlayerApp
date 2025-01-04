@@ -1,8 +1,6 @@
 package com.example.musicplayer.data
 
 import android.content.Context
-import com.example.musicplayer.data.FavoriteDAO
-import com.example.musicplayer.data.FavoriteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

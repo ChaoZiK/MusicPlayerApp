@@ -12,7 +12,9 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun EmptyList(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    titleText: String = "No songs yet",
+    subtitleText: String = "Add songs to this playlist to start listening"
 ) {
     Column(
         modifier = modifier
@@ -30,7 +32,7 @@ fun EmptyList(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "No songs yet",
+            text = titleText,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -38,7 +40,7 @@ fun EmptyList(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Add songs to this playlist to start listening",
+            text = subtitleText,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
             textAlign = TextAlign.Center
