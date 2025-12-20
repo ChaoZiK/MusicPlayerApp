@@ -5,8 +5,6 @@ The app reads audio files stored on the device, lets you **browse, search, sort*
 
 > ⚠️ Note: This repository contains the core app source code. Please open the project in Android Studio or any proper editor and make sure Gradle/Manifest resources match your local setup.
 
----
-
 ## Demo
 
 - **Home**: Songs tab + Playlists tab  
@@ -25,9 +23,6 @@ The app reads audio files stored on the device, lets you **browse, search, sort*
   <img src="images/menu.jpg" width="240" />
   <img src="images/feedback.jpg" width="240" />
 </p>
-
-
----
 
 ## Features
 
@@ -56,8 +51,6 @@ The app reads audio files stored on the device, lets you **browse, search, sort*
 - “Song details” bottom sheet (title/album/artist/duration/path, etc.)
 - Feedback screen (opens email intent)
 
----
-
 ## Tech Stack
 
 - **Kotlin**
@@ -69,14 +62,10 @@ The app reads audio files stored on the device, lets you **browse, search, sort*
 - Android **MediaStore** (device audio query)
 - **Dexter** (runtime permission handling)
 
----
-
 ## Requirements
 
 - Android **10 (API 29)** or higher
 - A physical device or emulator with local audio files
-
----
 
 ## Getting Started
 
@@ -90,15 +79,11 @@ The app requests audio read permission at runtime:
 - Android 13+: `READ_MEDIA_AUDIO`
 - Android 12 and below: `READ_EXTERNAL_STORAGE`
 
----
-
 ## Known Limitations (Current)
 
 - Library scan is limited to **/Download/** by default.
 - Metadata like genre/year may be unavailable depending on the file and query fields.
 - No custom playlist creation UI yet (only built-in playlists: Favorites & Recently Played).
-
----
 
 ## License
 
