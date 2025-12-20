@@ -13,13 +13,19 @@ The app reads audio files stored on the device, lets you **browse, search, sort*
 - **Mini Player**: quick controls at the bottom  
 - **Full Player**: album art, seek bar, shuffle/repeat, favorite, share, volume
 
-- `images/main_dark.png`
-- `images/main_light.png`
-- `images/playlists.jpg`
-- `images/play.jpg`
-- `images/search.jpg`
-- `images/menu.jpg`
-- `images/feedback.jpg`
+<p align="center">
+  <img src="images/main_dark.png" width="320" />
+  <img src="images/main_light.png" width="320" />
+</p>
+
+<p align="center">
+  <img src="images/playlists.jpg" width="240" />
+  <img src="images/play.jpg" width="240" />
+  <img src="images/search.jpg" width="240" />
+  <img src="images/menu.jpg" width="240" />
+  <img src="images/feedback.jpg" width="240" />
+</p>
+
 
 ---
 
